@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="com.github.bitcoinlabs.bitcoinmobileandroid"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <application android:label="bitcoin_mobile_android" android:icon="@drawable/icon">
+        <activity android:name="Bitcoin"
+                  android:label="@string/app_name"
+                android:configChanges="orientation|keyboard|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".QrDisplay" android:screenOrientation="portrait" android:configChanges="orientation|keyboard|keyboardHidden"/>
+        <activity android:name=".ConfirmPay" android:screenOrientation="portrait" android:configChanges="orientation|keyboard|keyboardHidden"/>
+    </application>
+</manifest> 
