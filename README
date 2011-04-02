@@ -5,4 +5,6 @@ INSTALL
 1) download and install gradle http://gradle.org/
 2) Add gradle's bin directory to your PATH
 3) Download and install Android SDK
-4) Download and install Version 7
+4) Download and install Android Version 7
+5) Create a new AVD (Android Virtual Device)
+6) Run gradle androidInstall to install bitcoin-mobile-android on the AVD
