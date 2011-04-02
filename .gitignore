@@ -4,3 +4,4 @@ gen
 out
 .gradle
 build
+.idea
