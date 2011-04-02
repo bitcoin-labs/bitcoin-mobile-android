@@ -1,1 +1,7 @@
 This is a bitcoin client for Android Mobile
+
+INSTALL 
+
+1) download and install gradle http://gradle.org/
+2) Add gradle's bin directory to your PATH
+
