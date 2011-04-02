@@ -2,9 +2,11 @@
 buildscript {
   repositories {
     mavenRepo(urls: 'http://jvoegele.com/maven2/')
+    mavenRepo(urls: 'http://maven2.langhua.org/public/')
   }
   dependencies {
     classpath 'com.jvoegele.gradle.plugins:android-plugin:0.9.9'
+    classpath 'com.google.zxing:zxing-javase:1.6'
   }
 }
 apply plugin: 'android'
