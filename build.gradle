@@ -10,6 +10,7 @@ buildscript {
   }
 }
 apply plugin: 'android'
+apply plugin: 'eclipse'
 repositories {
     mavenCentral()
 }
@@ -22,6 +23,13 @@ version = "0.0.1-SNAPSHOT"
 //	keyStorePassword = "mystorepass"
 //	keyAliasPassword = "myaliaspass"
 //}
+sourceSets {
+  main {
+    java {
+      srcDir 'src/bitcoinj/java'
+    }
+  }
+}
 // Configure the filtering of resources with properties from the Gradle's project scope (2)
 processResources {
 	expand (project.properties)
