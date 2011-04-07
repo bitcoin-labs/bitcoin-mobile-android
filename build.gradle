@@ -2,7 +2,6 @@
 buildscript {
   repositories {
     mavenRepo(urls: 'http://jvoegele.com/maven2/')
-    mavenRepo(urls: 'http://maven2.langhua.org/public/')
   }
   dependencies {
     classpath 'com.jvoegele.gradle.plugins:android-plugin:0.9.9'
@@ -13,6 +12,10 @@ apply plugin: 'android'
 apply plugin: 'eclipse'
 repositories {
     mavenCentral()
+    mavenRepo(urls: 'http://maven2.langhua.org/public/')
+}
+dependencies {
+    compile 'com.google.zxing:zxing-core:1.6'
 }
 // Sets the package version
 version = "0.0.1-SNAPSHOT"

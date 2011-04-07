@@ -9,5 +9,4 @@
             android:layout_height="fill_parent"
             android:src="@drawable/temp_qr_code"
             android:id="@+id/qrDisplay"/>
-
 </LinearLayout>
