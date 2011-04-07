@@ -1,4 +1,3 @@
-
 # Installing 
 
 * Download and install [gradle](http://gradle.org/) 
@@ -18,5 +17,5 @@ TODO instructions
 
 #### Building/Installing tp either
 <pre>
-gradle androidInstall
+gradle configureRelease androidInstall
 </pre>
