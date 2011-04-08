@@ -21,7 +21,7 @@ gradle configureRelease androidInstall
 </pre>
 
 #### Snapshot Release
-* [https://github.com/downloads/bitcoin-labs/bitcoin-mobile-android/bitcoin-mobile-android-0.0.1-SNAPSHOT.apk]
+* <https://github.com/downloads/bitcoin-labs/bitcoin-mobile-android/bitcoin-mobile-android-0.0.1-SNAPSHOT.apk>
 
 #### Sample bitcoin URI and QR Codes
-* [http://bitcoin-labs.github.com/bitcoin-mobile-android/uriScheme.html]
+* <http://bitcoin-labs.github.com/bitcoin-mobile-android/uriScheme.html>
