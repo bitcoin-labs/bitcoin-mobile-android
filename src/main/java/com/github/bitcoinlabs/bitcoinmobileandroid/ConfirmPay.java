@@ -3,6 +3,7 @@ package com.github.bitcoinlabs.bitcoinmobileandroid;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -17,18 +18,38 @@ import android.widget.Toast;
  */
 public class ConfirmPay extends Activity
 {
-    public static final String CONFIRM_PAY_VAL = "CONFIRM_PAY_VAL";
+    public static final String CONFIRM_PAY_URI = "CONFIRM_PAY_URI";
 
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pay_confirm);
+        
+        double val = 0;
+        Uri bitcoinUri = getIntent().getData();
+        assert("bitcoin".equals(bitcoinUri.getScheme()));
+        //hackity hackity
+        bitcoinUri = Uri.parse("bitcoin://" + bitcoinUri.getEncodedSchemeSpecificPart());
 
-        final double val = getIntent().getDoubleExtra(CONFIRM_PAY_VAL, 0);
+        String bitcoinAddress = bitcoinUri.getAuthority();
+        String amount = bitcoinUri.getQueryParameter("amount");
+        String label = bitcoinUri.getQueryParameter("label");
+        String message = bitcoinUri.getQueryParameter("message");
 
         final TextView payAmount = (TextView) findViewById(R.id.payAmount);
-
-        payAmount.setText(MoneyUtils.formatMoney(val));
+        
+        final TextView payDetails = (TextView) findViewById(R.id.payDetails);
+        payDetails.setText("Address: " + bitcoinAddress + "\n" + 
+        "Amount: " + amount + "\n" + 
+        "Label: " + label + "\n" + 
+        "Message: " + message);
+        
+        double amountD = 0.0;
+        try {
+            amountD = Double.parseDouble(amount);
+        } catch (Exception e) {
+        }
+        payAmount.setText(MoneyUtils.formatMoney(amountD));
         findViewById(R.id.confirmButton).setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View view)
@@ -39,10 +60,9 @@ public class ConfirmPay extends Activity
         });
     }
 
-    public static void callMe(Context c, double val)
+    public static void callMe(Context c, Uri bitcoinUri)
     {
-        final Intent intent = new Intent(c, ConfirmPay.class);
-        intent.putExtra(CONFIRM_PAY_VAL, val);
+        final Intent intent = new Intent(null, bitcoinUri, c, ConfirmPay.class);
         c.startActivity(intent);
     }
 }

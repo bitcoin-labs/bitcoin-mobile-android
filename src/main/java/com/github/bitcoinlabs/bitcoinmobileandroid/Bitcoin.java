@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
@@ -64,11 +65,9 @@ public class Bitcoin extends Activity
             {
                 String contents = intent.getStringExtra("SCAN_RESULT");
                 String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+                Uri bitcoinUri = Uri.parse(contents);
 
-                ConfirmPay.callMe(this, 424);
-
-                Toast.makeText(this, "format: "+ format +", content: "+ contents, Toast.LENGTH_LONG).show();
-                // Handle successful scan
+                ConfirmPay.callMe(this, bitcoinUri);
             }
             else if (resultCode == RESULT_CANCELED)
             {

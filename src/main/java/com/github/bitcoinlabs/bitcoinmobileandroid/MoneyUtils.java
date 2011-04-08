@@ -13,7 +13,7 @@ public class MoneyUtils
 {
     public static String formatMoney(double val)
     {
-        final DecimalFormat decimalFormat = new DecimalFormat("#,###.00");
+        final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
         return decimalFormat.format(val);
     }
 
