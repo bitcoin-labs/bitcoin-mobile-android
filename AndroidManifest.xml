@@ -14,6 +14,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".QrDisplay" android:screenOrientation="portrait" android:configChanges="orientation|keyboard|keyboardHidden"/>
-        <activity android:name=".ConfirmPay" android:screenOrientation="portrait" android:configChanges="orientation|keyboard|keyboardHidden"/>
+        <activity android:name=".ConfirmPay" android:screenOrientation="portrait" android:configChanges="orientation|keyboard|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="bitcoin" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest> 
