@@ -1,3 +1,5 @@
+package com.github.bitcoinlabs.bitcoinmobileandroid.db;
+
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
