@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,12 +32,12 @@ public class ConfirmPay extends Activity
         //hackity hackity
         bitcoinUri = Uri.parse("bitcoin://" + bitcoinUri.getEncodedSchemeSpecificPart());
 
-        String bitcoinAddress = bitcoinUri.getAuthority();
+        final String bitcoinAddress = bitcoinUri.getAuthority();
         String amount = bitcoinUri.getQueryParameter("amount");
-        String label = bitcoinUri.getQueryParameter("label");
+        final String label = bitcoinUri.getQueryParameter("label");
         String message = bitcoinUri.getQueryParameter("message");
 
-        final TextView payAmount = (TextView) findViewById(R.id.payAmount);
+        final EditText payAmount = (EditText) findViewById(R.id.payAmount);
         
         final TextView payDetails = (TextView) findViewById(R.id.payDetails);
         payDetails.setText("Address: " + bitcoinAddress + "\n" + 
@@ -54,7 +55,16 @@ public class ConfirmPay extends Activity
         {
             public void onClick(View view)
             {
-                Toast.makeText(ConfirmPay.this, "You did it!", Toast.LENGTH_LONG).show();
+                Toast.makeText(ConfirmPay.this, payAmount.getText() + "BTC paid to " + label + " (" + bitcoinAddress + ")" , Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
+        findViewById(R.id.cancelButton).setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View view)
+            {
+                setResult(RESULT_CANCELED);
+                Toast.makeText(ConfirmPay.this, "Bitcoin payment canceled." , Toast.LENGTH_LONG).show();
                 finish();
             }
         });

@@ -1,5 +1,7 @@
 package com.github.bitcoinlabs.bitcoinmobileandroid;
 
+import java.text.DecimalFormat;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -9,13 +11,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
-import android.text.method.Touch;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import java.text.DecimalFormat;
 
 public class Bitcoin extends Activity
 {
