@@ -1,4 +1,5 @@
-package com.github.bitcoinlabs.bitcoinmobileandroid.db;
+
+package com.github.bitcoinlabs.bitcoinmobileandroid;
 
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
@@ -17,7 +18,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(
             "CREATE TABLE keys (" +
-            "id         INTEGER PRIMARY KEY," +
+            "id         INTEGER PRIMARY KEY AUTOINCREMENT," +
             "address58  TEXT," +
             "key        BLOB);");
     }
