@@ -32,7 +32,6 @@ import java.net.InetAddress;
  */
 public class PrivateKeys {
     public static void main(String[] args) throws Exception {
-      /*
         NetworkParameters params = NetworkParameters.prodNet();
         try {
             // Decode the private key from Satoshis Base58 variant.
@@ -46,12 +45,8 @@ public class PrivateKeys {
             Wallet wallet = new Wallet(params);
             wallet.addKey(key);
 
-            
-            //InetAddress addr = new InetAddress("66.138.57.118");
-            //InetAddress.getLocalHost()
-            
             // Find the transactions that involve those coins.
-            NetworkConnection conn = new NetworkConnection(addr, params);
+            NetworkConnection conn = new NetworkConnection(InetAddress.getLocalHost(), params);
             BlockChain chain = new BlockChain(params, wallet, new MemoryBlockStore(params));
             Peer peer = new Peer(params, conn, chain);
             peer.start();
@@ -68,6 +63,5 @@ public class PrivateKeys {
                     "to send to.");
             return;
         }
-      */
     }
 }
