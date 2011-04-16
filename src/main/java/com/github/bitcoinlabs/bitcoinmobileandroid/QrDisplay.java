@@ -5,6 +5,7 @@ import java.util.Hashtable;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import com.google.zxing.common.BitMatrix;
 import com.google.bitcoin.core.ECKey;
 import com.google.bitcoin.core.Address;
 import com.google.bitcoin.core.NetworkParameters;
+
+import com.github.bitcoinlabs.bitcoinmobileandroid.WalletOpenHelper;
 
 
 /**
@@ -56,12 +59,23 @@ public class QrDisplay extends Activity {
 
     private void showQrBitmap(double val) throws WriterException {
         
-        ECKey k = new ECKey();
-        String address = k.toAddress(NetworkParameters.prodNet()).toString();
+        // Create a key
+        ECKey key = new ECKey();
+        String address58 = key.toAddress(NetworkParameters.prodNet()).toString();
+        
+        // Save it
+        WalletOpenHelper helper = new WalletOpenHelper(getApplicationContext());
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.execSQL(
+                "INSERT INTO keys ('address58', 'key') VALUES (?, ?)",
+                new Object[] { address58, key.toASN1()} );
+        
+        //TEMP: read it
+        //Cursor cursor = db.query("SELECT * FROM keys");
         
         BarcodeFormat format = BarcodeFormat.QR_CODE;
         int dimension = 0;
-        String contents = "bitcoin:"+address+"?amount="+val;
+        String contents = "bitcoin:" + address58 + "?amount=" + val;
         Hashtable<EncodeHintType, Object> hints = null;
         String encoding = guessAppropriateEncoding(contents);
         if (encoding != null) {
