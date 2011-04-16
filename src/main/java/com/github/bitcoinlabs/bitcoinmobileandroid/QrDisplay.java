@@ -18,6 +18,11 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
+import com.google.bitcoin.core.ECKey;
+import com.google.bitcoin.core.Address;
+import com.google.bitcoin.core.NetworkParameters;
+
+
 /**
  * Created by IntelliJ IDEA. User: kevin Date: 4/1/11 Time: 2:05 PM To change
  * this template use File | Settings | File Templates.
@@ -50,9 +55,12 @@ public class QrDisplay extends Activity {
     }
 
     private void showQrBitmap(double val) throws WriterException {
+        
+        ECKey k = new ECKey();
+        String address = k.toAddress(NetworkParameters.prodNet()).toString();
+        
         BarcodeFormat format = BarcodeFormat.QR_CODE;
         int dimension = 0;
-        String address = "185fv9g323aTbGK2BC9H4x3NGtMbFNKusF";
         String contents = "bitcoin:"+address+"?amount="+val;
         Hashtable<EncodeHintType, Object> hints = null;
         String encoding = guessAppropriateEncoding(contents);
