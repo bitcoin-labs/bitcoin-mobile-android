@@ -2,4 +2,10 @@
 <resources>
     <string name="app_name">Bitcoin</string>
     <string name="cancelPayButton">Cancel</string>
+    <string name="receiveAmountLabel">Receive Amount</string>
+    <string name="recieveLabelLabel">Label</string>
+    <string name="receiveMessageLabel">Message</string>
+    <string-array name="btcAddresses">
+        <item>185fv9g323aTbGK2BC9H4x3NGtMbFNKusF</item>
+    </string-array>
 </resources>

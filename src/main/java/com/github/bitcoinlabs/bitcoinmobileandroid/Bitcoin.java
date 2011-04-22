@@ -30,7 +30,7 @@ public class Bitcoin extends Activity
         {
             public void onClick(View view)
             {
-                enterValue();
+                Receive.callMe(Bitcoin.this);
             }
         });
         findViewById(R.id.scanButton).setOnClickListener(new View.OnClickListener()
