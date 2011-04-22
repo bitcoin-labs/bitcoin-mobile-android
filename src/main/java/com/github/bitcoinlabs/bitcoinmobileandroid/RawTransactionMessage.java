@@ -1,3 +1,4 @@
+package com.github.bitcoinlabs.bitcoinmobileandroid;
 
 import java.util.ArrayList;
 import java.math.BigInteger;
@@ -6,7 +7,6 @@ import java.io.*;
 import com.google.bitcoin.core.ECKey;
 import com.google.bitcoin.core.Utils;
 import com.google.bitcoin.core.VarInt;
-
 
 public class RawTransactionMessage {
 
