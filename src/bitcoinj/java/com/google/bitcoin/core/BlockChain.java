@@ -16,10 +16,10 @@
 
 package com.google.bitcoin.core;
 
-import java.io.File;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import static com.google.bitcoin.core.Utils.LOG;
 
@@ -113,22 +113,9 @@ public class BlockChain {
             LOG(block.toString());
             throw e;
         }
-        // If this block is a full block, scan, otherwise it's just headers (eg from getheaders or a unit test).
-        if (block.transactions != null) {
-            // Scan the transactions to find out if any sent money to us. We don't care about the rest.
-            // TODO: We should also scan to see if any of our own keys sent money to somebody else and became spent.
-            for (Transaction tx : block.transactions) {
-                try {
-                    scanTransaction(tx);
-                } catch (ScriptException e) {
-                    // We don't want scripts we don't understand to break the block chain,
-                    // so just note that this tx was not scanned here and continue.
-                    LOG("Failed to parse a script: " + e.toString());
-                }
-            }
-        }
-        // We don't need the transaction data anymore. Free up some memory.
-        block.transactions = null;
+        // Inform the wallet about transactions relevant to our keys, then throw away the transaction data.
+        extractRelevantTransactions(block);
+        assert block.transactions == null;
 
         if (blockStore.get(block.getHash()) != null) {
             LOG("Already have block");
@@ -143,33 +130,57 @@ public class BlockChain {
             unconnectedBlocks.add(block);
             return false;
         } else {
-            // The block connects to somewhere on the chain. Not necessarily the top of the best known chain.
+            // It connects to somewhere on the chain. Not necessarily the top of the best known chain.
             checkDifficultyTransitions(storedPrev, block);
-            StoredBlock newStoredBlock = storedPrev.build(block);
-            // Store it.
-            blockStore.put(newStoredBlock);
-            if (storedPrev.equals(chainHead)) {
-                // This block connects to the best known block, it is a normal continuation of the system.
-                setChainHead(newStoredBlock);
-                LOG("Received block " + block.getHashAsString() + ", chain is now " + chainHead.getHeight() +
-                    " blocks high");
-            } else {
-                // This block connects to somewhere other than the top of the chain.
-                if (newStoredBlock.moreWorkThan(chainHead)) {
-                    // This chain has overtaken the one we currently believe is best. Reorganize is required.
-                    wallet.reorganize(chainHead, newStoredBlock);
-                    // Update the pointer to the best known block.
-                    setChainHead(newStoredBlock);
-                } else {
-                    LOG("Received a block which forks the chain, but it did not cause a reorganize.");
-                }
-            }
+            connectAndStoreBlock(block, storedPrev);
         }
 
         if (tryConnecting)
             tryConnectingUnconnected();
 
         return true;
+    }
+
+    private void connectAndStoreBlock(Block block, StoredBlock storedPrev) throws BlockStoreException, VerificationException {
+        StoredBlock newStoredBlock = storedPrev.build(block);
+        blockStore.put(newStoredBlock);
+        if (storedPrev.equals(chainHead)) {
+            // This block connects to the best known block, it is a normal continuation of the system.
+            setChainHead(newStoredBlock);
+            LOG("Received block " + block.getHashAsString() + ", chain is now " + chainHead.getHeight() +
+                " blocks high");
+        } else {
+            // This block connects to somewhere other than the top of the chain.
+            if (newStoredBlock.moreWorkThan(chainHead)) {
+                // This chain has overtaken the one we currently believe is best. Reorganize is required.
+                wallet.reorganize(chainHead, newStoredBlock);
+                // Update the pointer to the best known block.
+                setChainHead(newStoredBlock);
+            } else {
+                LOG("Received a block which forks the chain, but it did not cause a reorganize.");
+            }
+        }
+    }
+
+    private void extractRelevantTransactions(Block block) throws VerificationException {
+        // If this block is a full block, scan, otherwise it's just headers (eg from getheaders or a unit test).
+        if (block.transactions != null) {
+            // Scan the transactions to find out if any sent money to us. We don't care about the rest.
+            // TODO: We should also scan to see if any of our own keys sent money to somebody else and became spent.
+            for (Transaction tx : block.transactions) {
+                try {
+                    scanTransaction(tx);
+                } catch (ScriptException e) {
+                    // We don't want scripts we don't understand to break the block chain,
+                    // so just note that this tx was not scanned here and continue.
+                    LOG("Failed to parse a script: " + e.toString());
+                }
+            }
+        }
+        // Throw away the transactions. We have to do this because we can't hold all the transaction data for the
+        // production chain in memory at once. Because BitCoinJ implements client mode/simplified payment
+        // verification we don't store the transactions to disk or use them later anyway.
+        block.transactions = null;
     }
 
     private void setChainHead(StoredBlock chainHead) {
@@ -186,13 +197,14 @@ public class BlockChain {
      */
     private void tryConnectingUnconnected() throws VerificationException, ScriptException, BlockStoreException {
         // For each block in our unconnected list, try and fit it onto the head of the chain. If we succeed remove it
-        // from the list and keep going. If we changed the head of the list at the end of the round,
-        // try again until we can't fit anything else on the top.
+        // from the list and keep going. If we changed the head of the list at the end of the round try again until
+        // we can't fit anything else on the top.
         int blocksConnectedThisRound;
         do {
             blocksConnectedThisRound = 0;
-            for (int i = 0; i < unconnectedBlocks.size(); i++) {
-                Block block = unconnectedBlocks.get(i);
+            Iterator<Block> iter = unconnectedBlocks.iterator();
+            while (iter.hasNext()) {
+                Block block = iter.next();
                 // Look up the blocks previous.
                 StoredBlock prev = blockStore.get(block.getPrevBlockHash());
                 if (prev == null) {
@@ -202,8 +214,7 @@ public class BlockChain {
                 // Otherwise we can connect it now.
                 // False here ensures we don't recurse infinitely downwards when connecting huge chains.
                 add(block, false);
-                unconnectedBlocks.remove(i);
-                i--;  // The next iteration of the for loop will make "i" point to the right index again.
+                iter.remove();
                 blocksConnectedThisRound++;
             }
             if (blocksConnectedThisRound > 0) {

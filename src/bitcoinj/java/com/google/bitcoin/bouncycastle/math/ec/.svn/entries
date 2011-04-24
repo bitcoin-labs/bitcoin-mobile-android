@@ -1,7 +1,7 @@
 10
 
 dir
-53
+56
 http://bitcoinj.googlecode.com/svn/trunk/src/com/google/bitcoin/bouncycastle/math/ec
 http://bitcoinj.googlecode.com/svn
 
@@ -25,40 +25,6 @@ hearn@google.com
 
 
 a743e126-8abc-4207-e589-8f9b47be99bf
-
-ECPoint.java
-file
-
-
-
-
-2011-04-16T21:07:52.000000Z
-e7118c5b7f4f024cb3b461bfcabe298d
-2011-03-07T10:17:10.024671Z
-9
-hearn@google.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-17653
 
 FpNafMultiplier.java
 file
@@ -94,6 +60,40 @@ hearn@google.com
 
 1047
 
+ECPoint.java
+file
+
+
+
+
+2011-04-16T21:07:52.000000Z
+e7118c5b7f4f024cb3b461bfcabe298d
+2011-03-07T10:17:10.024671Z
+9
+hearn@google.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+17653
+
 WNafMultiplier.java
 file
 
@@ -128,40 +128,6 @@ hearn@google.com
 
 7529
 
-ECFieldElement.java
-file
-
-
-
-
-2011-04-16T21:07:52.000000Z
-9e5c9056d1bf0f5167328828e7cf4f1d
-2011-03-07T10:17:10.024671Z
-9
-hearn@google.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-39806
-
 ReferenceMultiplier.java
 file
 
@@ -195,6 +161,40 @@ hearn@google.com
 
 
 883
+
+ECFieldElement.java
+file
+
+
+
+
+2011-04-16T21:07:52.000000Z
+9e5c9056d1bf0f5167328828e7cf4f1d
+2011-03-07T10:17:10.024671Z
+9
+hearn@google.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+39806
 
 WTauNafPreCompInfo.java
 file
@@ -264,40 +264,6 @@ hearn@google.com
 
 3888
 
-ECAlgorithms.java
-file
-
-
-
-
-2011-04-16T21:07:52.000000Z
-15648420b1cac7e63ffba56f7c4b6255
-2011-03-07T10:17:10.024671Z
-9
-hearn@google.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-2612
-
 PreCompInfo.java
 file
 
@@ -331,6 +297,40 @@ hearn@google.com
 
 
 244
+
+ECAlgorithms.java
+file
+
+
+
+
+2011-04-16T21:07:52.000000Z
+15648420b1cac7e63ffba56f7c4b6255
+2011-03-07T10:17:10.024671Z
+9
+hearn@google.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2612
 
 ECConstants.java
 file

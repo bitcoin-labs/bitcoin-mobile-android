@@ -1,7 +1,7 @@
 10
 
 dir
-53
+56
 http://bitcoinj.googlecode.com/svn/trunk/src/com/google/bitcoin/bouncycastle/crypto/tls
 http://bitcoinj.googlecode.com/svn
 
@@ -25,40 +25,6 @@ hearn@google.com
 
 
 a743e126-8abc-4207-e589-8f9b47be99bf
-
-TlsCipherSuiteManager.java
-file
-
-
-
-
-2011-04-16T21:07:50.000000Z
-98baa8911eae48f83de40812b92fcc3e
-2011-03-07T10:17:10.024671Z
-9
-hearn@google.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-6650
 
 TlsNullCipherSuite.java
 file
@@ -93,6 +59,40 @@ hearn@google.com
 
 
 913
+
+TlsCipherSuiteManager.java
+file
+
+
+
+
+2011-04-16T21:07:50.000000Z
+98baa8911eae48f83de40812b92fcc3e
+2011-03-07T10:17:10.024671Z
+9
+hearn@google.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6650
 
 TlsCipherSuite.java
 file
@@ -264,40 +264,6 @@ hearn@google.com
 
 424
 
-TlsProtocolHandler.java
-file
-
-
-
-
-2011-04-16T21:07:50.000000Z
-e61d2058802c6293392d3ec2ec8dbf34
-2011-03-07T10:17:10.024671Z
-9
-hearn@google.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-55406
-
 Certificate.java
 file
 
@@ -332,14 +298,14 @@ hearn@google.com
 
 2427
 
-TlsUtils.java
+TlsProtocolHandler.java
 file
 
 
 
 
 2011-04-16T21:07:50.000000Z
-3723dbe55e36b55f97c502176c37f753
+e61d2058802c6293392d3ec2ec8dbf34
 2011-03-07T10:17:10.024671Z
 9
 hearn@google.com
@@ -364,7 +330,7 @@ hearn@google.com
 
 
 
-7629
+55406
 
 TlsMac.java
 file
@@ -400,14 +366,14 @@ hearn@google.com
 
 2488
 
-CombinedHash.java
+TlsUtils.java
 file
 
 
 
 
 2011-04-16T21:07:50.000000Z
-0734ed9bfb53eb8e33c0697b8b909a22
+3723dbe55e36b55f97c502176c37f753
 2011-03-07T10:17:10.024671Z
 9
 hearn@google.com
@@ -432,7 +398,7 @@ hearn@google.com
 
 
 
-1681
+7629
 
 TlsDSSSigner.java
 file
@@ -467,6 +433,40 @@ hearn@google.com
 
 
 388
+
+CombinedHash.java
+file
+
+
+
+
+2011-04-16T21:07:50.000000Z
+0734ed9bfb53eb8e33c0697b8b909a22
+2011-03-07T10:17:10.024671Z
+9
+hearn@google.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1681
 
 TlsRuntimeException.java
 file
