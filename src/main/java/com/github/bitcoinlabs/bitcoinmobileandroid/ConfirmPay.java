@@ -24,6 +24,7 @@ public class ConfirmPay extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        setTitle("Send Bitcoin");
         setContentView(R.layout.pay_confirm);
         
         double val = 0;
@@ -37,13 +38,13 @@ public class ConfirmPay extends Activity
         final String label = bitcoinUri.getQueryParameter("label");
         String message = bitcoinUri.getQueryParameter("message");
 
-        final EditText payAmount = (EditText) findViewById(R.id.payAmount);
-        
-        final TextView payDetails = (TextView) findViewById(R.id.payDetails);
-        payDetails.setText("Address: " + bitcoinAddress + "\n" + 
-        "Amount: " + amount + "\n" + 
-        "Label: " + label + "\n" + 
-        "Message: " + message);
+        TextView payAddress = (TextView)findViewById(R.id.snd_address);
+        final EditText payAmount = (EditText) findViewById(R.id.snd_amount);
+        final EditText payLabel = (EditText) findViewById(R.id.snd_label);
+        final EditText payMessage = (EditText) findViewById(R.id.snd_message);
+        payAddress.setText("Address: " + bitcoinAddress);
+        payLabel.setText(label);
+        payMessage.setText(message);
         
         double amountD = 0.0;
         try {
@@ -51,11 +52,12 @@ public class ConfirmPay extends Activity
         } catch (Exception e) {
         }
         payAmount.setText(MoneyUtils.formatMoney(amountD));
+        payAmount.setSelectAllOnFocus(true);
         findViewById(R.id.confirmButton).setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View view)
             {
-                Toast.makeText(ConfirmPay.this, payAmount.getText() + "BTC paid to " + label + " (" + bitcoinAddress + ")" , Toast.LENGTH_LONG).show();
+                Toast.makeText(ConfirmPay.this, payAmount.getText() + "BTC paid to " + payLabel.getText() + " (" + bitcoinAddress + ")" , Toast.LENGTH_LONG).show();
                 finish();
             }
         });

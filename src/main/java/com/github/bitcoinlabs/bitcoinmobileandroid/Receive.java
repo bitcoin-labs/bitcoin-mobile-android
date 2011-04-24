@@ -5,10 +5,13 @@ import java.util.Hashtable;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.net.Uri.Builder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -19,6 +22,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -37,54 +41,63 @@ public class Receive extends Activity {
 
     QRCodeWriter qrCodeWriter = new QRCodeWriter();
 
+    protected String btcAddress;
+
+    private EditText amount;
+
+    private EditText label;
+
+    private EditText message;
+
+    private TextView btcAddressView;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.receive);
-        final Spinner btcAddressSpinner = (Spinner)findViewById(R.id.rcv_btcAddress);
-        final EditText amount = (EditText)findViewById(R.id.rcv_amount);
-        final EditText label = (EditText)findViewById(R.id.rcv_label);
-        final EditText message = (EditText)findViewById(R.id.rcv_message);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this, R.array.btcAddresses, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        btcAddressSpinner.setAdapter(adapter);
-
         setTitle("Receive Bitcoin");
-        btcAddressSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-            public void onItemSelected(AdapterView<?> arg0, View arg1,
-                    int arg2, long arg3) {
-                updateQRCode(btcAddressSpinner, amount, label, message);
-            }
-
-            public void onNothingSelected(AdapterView<?> arg0) {
-            }
-        });
+        setContentView(R.layout.receive);
+        btcAddressView = (TextView)findViewById(R.id.rcv_btcAddress);
+        amount = (EditText)findViewById(R.id.rcv_amount);
+        label = (EditText)findViewById(R.id.rcv_label);
+        message = (EditText)findViewById(R.id.rcv_message);
+        final SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        String receiveLabelValue = preferences.getString("rcv_label", null);
+        label.setText(receiveLabelValue);
+        amount.setSelectAllOnFocus(true);
+        btcAddressView.setText("Address:\n" + "Generating new key...");
+        new GenerateKeyTask().execute();
         OnEditorActionListener onEditorActionListener = new OnEditorActionListener() {
             
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                updateQRCode(btcAddressSpinner, amount, label, message);
+                if (v == label) {
+                    Editor edit = preferences.edit().
+                    putString("rcv_label", label.getText().toString());
+                    edit.commit();
+                }
+                updateQRCode();
                 return true;
             }
         };
         amount.setOnEditorActionListener(onEditorActionListener);
         label.setOnEditorActionListener(onEditorActionListener);
         message.setOnEditorActionListener(onEditorActionListener);
-        updateQRCode(btcAddressSpinner, amount, label, message);
+        updateQRCode();
     }
 
-    private void updateQRCode(Spinner btcAddressSpinner, EditText amount, EditText label, EditText message) {
-        try {
-            Double receiveAmount = null;
+    private void updateQRCode() {
+        if (btcAddress != null) {
+            btcAddressView.setText("Address:\n" + btcAddress);
             try {
-                receiveAmount = Double.parseDouble(amount.getText().toString());
-            } catch (NumberFormatException e) {/*let receiveAmount be null*/}
-            showQrBitmap(btcAddressSpinner.getSelectedItem()+"", receiveAmount, label.getText().toString(), message.getText().toString());
-        } catch (WriterException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+                Double receiveAmount = null;
+                try {
+                    receiveAmount = Double.parseDouble(amount.getText().toString());
+                } catch (NumberFormatException e) {/*let receiveAmount be null*/}
+                showQrBitmap(btcAddress, receiveAmount, label.getText().toString(), message.getText().toString());
+            } catch (WriterException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 
@@ -95,7 +108,6 @@ public class Receive extends Activity {
 
     private void showQrBitmap(String btcAddress, Double amount, String label, String message) throws WriterException {
         Builder builder = new Uri.Builder();
-        btcAddress = "185fv9g323aTbGK2BC9H4x3NGtMbFNKusF";
         builder.scheme("bitcoin");
         builder.authority(btcAddress);
         if (amount != null) {
@@ -129,5 +141,21 @@ public class Receive extends Activity {
         drawable.setFilterBitmap(false);
         final ImageView qrDisplay = (ImageView) findViewById(R.id.qrDisplay);
         qrDisplay.setImageDrawable(drawable);
+    }
+
+    private class GenerateKeyTask extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... ignored) {
+            WalletOpenHelper wallet = new WalletOpenHelper(getApplicationContext());
+            String btcAddress = wallet.newKey();
+            return btcAddress;
+        }
+
+        @Override
+        protected void onPostExecute(String generatedBtcAddress) {
+            Receive.this.btcAddress = generatedBtcAddress;
+            updateQRCode();
+        }
     }
 }

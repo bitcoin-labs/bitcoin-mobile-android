@@ -4,21 +4,35 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
-    <Spinner android:layout_height="wrap_content"
-    android:layout_width="fill_parent"
-    android:id="@+id/rcv.btcAddress"></Spinner>
-    <LinearLayout android:layout_width="fill_parent" android:id="@+id/linearLayout1" android:layout_height="wrap_content">
-        <EditText android:hint="@string/receiveAmountLabel" android:layout_height="wrap_content" android:inputType="number|numberDecimal|numberSigned" android:id="@+id/rcv.amount" android:layout_width="fill_parent" android:layout_weight="1"></EditText>
-        <EditText android:hint="@string/recieveLabelLabel" android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/rcv.label" android:layout_weight="1"></EditText>
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:id="@+id/rcv.btcAddress"/>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:id="@+id/linearLayout1"
+        android:layout_height="wrap_content">
+        <EditText
+            android:hint="@string/receiveAmountLabel"
+            android:layout_height="wrap_content"
+            android:inputType="number|numberDecimal|numberSigned"
+            android:id="@+id/rcv.amount"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"/>
+        <EditText
+            android:hint="@string/recieveLabelLabel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rcv.label"
+            android:layout_weight="1"/>
     </LinearLayout>
     <EditText
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:hint="Description"
-        android:id="@+id/rcv.message"></EditText>
+        android:id="@+id/rcv.message"/>
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:src="@drawable/temp_qr_code"
         android:id="@+id/qrDisplay"/>
 </LinearLayout>
