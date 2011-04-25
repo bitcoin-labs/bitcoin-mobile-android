@@ -8,15 +8,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/snd.address"/>
-    <LinearLayout android:layout_width="fill_parent" android:id="@+id/linearLayout1" android:layout_height="wrap_content">
-        <EditText android:hint="Amount to Pay" android:layout_height="wrap_content" android:inputType="number|numberDecimal|numberSigned" android:id="@+id/snd.amount" android:layout_width="fill_parent" android:layout_weight="1"></EditText>
-        <EditText android:hint="Label" android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/snd.label" android:layout_weight="1"></EditText>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:id="@+id/linearLayout1"
+        android:layout_height="wrap_content">
+        <EditText
+            android:hint="Amount to Pay"
+            android:layout_height="wrap_content"
+            android:inputType="number|numberDecimal|numberSigned"
+            android:id="@+id/snd.amount"
+            android:imeOptions="actionDone"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"/>
+        <EditText   
+            android:hint="Label"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            android:id="@+id/snd.label"
+            android:layout_weight="1"/>
     </LinearLayout>
     <EditText
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:hint="Description"
-        android:id="@+id/snd.message"></EditText>
+        android:imeOptions="actionDone"
+        android:id="@+id/snd.message"/>
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

@@ -4,6 +4,7 @@ package com.github.bitcoinlabs.bitcoinmobileandroid;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.bitcoin.core.Address;
 import com.google.bitcoin.core.ECKey;
 import com.google.bitcoin.core.NetworkParameters;
 
@@ -39,19 +40,20 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
     
-    public String newKey() {
+    public Address newKey() {
         ECKey key = new ECKey();
-        String address = addKey(key);
+        Address address = addKey(key);
         return address;
     }
 
-    public String addKey(ECKey key) {
+    public Address addKey(ECKey key) {
         SQLiteDatabase db = getWritableDatabase();
-        String address58 = key.toAddress(NetworkParameters.prodNet()).toString();
+        Address address = key.toAddress(NetworkParameters.prodNet());
         db.execSQL(
                 "INSERT INTO keys ('address58', 'key') VALUES (?, ?)",
-                new Object[] { address58, key.toASN1()} );
-        return address58;
+                new Object[] { address.toString(), key.toASN1()} );
+        db.close();
+        return address;
     }
     
     public Cursor getAddresses() {

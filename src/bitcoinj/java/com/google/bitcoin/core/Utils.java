@@ -99,7 +99,7 @@ public class Utils {
     }
     
     public static void uint64ToByteStreamLE( BigInteger val,  OutputStream stream) throws IOException {
-        byte[] bytes = val.toByteArray();
+        byte[] bytes = asByteArray(val);
         if (bytes.length > 8) { 
             throw new RuntimeException("Input too large to encode into a uint64");
         }
@@ -109,6 +109,35 @@ public class Utils {
             for (int i = 0; i < 8 - bytes.length; i++)
                 stream.write(0);
         }
+    }
+
+    /**
+     * workaround for 
+     * [ant:apply] UNEXPECTED TOP-LEVEL EXCEPTION:
+     * [ant:apply] com.android.dx.cf.code.SimException: local variable type mismatch: attempt to set or access a value of type byte[] using a local variable of type java.math.BigInteger. This is symptomatic of .class transformation tools that ignore local variable information.
+     * ...
+     * [ant:apply] ...at bytecode offset 00000005
+     * [ant:apply] locals[0000]: Ljava/math/BigInteger;
+     * [ant:apply] locals[0001]: Ljava/io/OutputStream;
+     * [ant:apply] locals[0002]: <invalid>
+     * [ant:apply] stack[top0]: [B
+     * [ant:apply] ...while working on block 0004
+     * [ant:apply] ...while working on method uint64ToByteStreamLE:(Ljava/math/BigInteger;Ljava/io/OutputStream;)V
+     * [ant:apply] ...while processing uint64ToByteStreamLE (Ljava/math/BigInteger;Ljava/io/OutputStream;)V
+     * [ant:apply] ...while processing com/google/bitcoin/core/Utils.class
+     * [ant:apply] 
+     * [ant:apply] 1 error; aborting
+     * 
+     * which occured with
+     * proguard not playing nice with androidPackage
+     * proguard is enabled with
+     * gradle configureRelease androidInstall
+     *  
+     * @param val
+     * @return
+     */
+    private static byte[] asByteArray(BigInteger val) {
+        return val.toByteArray();
     }
 
     /**

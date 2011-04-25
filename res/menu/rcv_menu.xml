@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Balance" android:id="@+id/balance"></item>
+    <item android:title="Play address DTMF" android:titleCondensed="DTMF" android:id="@+id/dtmf"></item>
+</menu>

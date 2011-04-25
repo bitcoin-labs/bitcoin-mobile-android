@@ -108,4 +108,16 @@ public class Address {
         System.arraycopy(check, 0, addressBytes, 21, 4);
         return Base58.encode(addressBytes);
     }
+
+    public byte[] asBytes() {
+        byte[] input = hash160;
+        // A stringified address is:
+        //   1 byte version + 20 bytes hash + 4 bytes check code (itself a truncated hash)
+        byte[] addressBytes = new byte[1 + 20 + 4];
+        addressBytes[0] = params.addressHeader;
+        System.arraycopy(input, 0, addressBytes, 1, 20);
+        byte[] check = Utils.doubleDigest(addressBytes, 0, 21);
+        System.arraycopy(check, 0, addressBytes, 21, 4);
+        return addressBytes;
+    }
 }

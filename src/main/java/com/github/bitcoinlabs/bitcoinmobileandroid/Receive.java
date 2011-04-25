@@ -1,6 +1,7 @@
 package com.github.bitcoinlabs.bitcoinmobileandroid;
 
 import java.util.Hashtable;
+import java.util.LinkedList;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,12 +10,20 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.net.Uri;
 import android.net.Uri.Builder;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore.Audio;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.View.OnKeyListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -27,6 +36,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.google.bitcoin.core.Address;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
@@ -41,7 +51,7 @@ public class Receive extends Activity {
 
     QRCodeWriter qrCodeWriter = new QRCodeWriter();
 
-    protected String btcAddress;
+    protected Address btcAddress;
 
     private EditText amount;
 
@@ -82,9 +92,41 @@ public class Receive extends Activity {
         amount.setOnEditorActionListener(onEditorActionListener);
         label.setOnEditorActionListener(onEditorActionListener);
         message.setOnEditorActionListener(onEditorActionListener);
+        OnFocusChangeListener onFocusChangeListener = new OnFocusChangeListener() {
+            
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    updateQRCode();
+                }
+            }
+        };
+        amount.setOnFocusChangeListener(onFocusChangeListener);
+        label.setOnFocusChangeListener(onFocusChangeListener);
+        message.setOnEditorActionListener(onEditorActionListener);
         updateQRCode();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.rcv_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+        case R.id.balance:
+            finish();
+            return true;
+        case R.id.dtmf:
+            new DTMFTask().execute(btcAddress);
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
     private void updateQRCode() {
         if (btcAddress != null) {
             btcAddressView.setText("Address:\n" + btcAddress);
@@ -93,7 +135,7 @@ public class Receive extends Activity {
                 try {
                     receiveAmount = Double.parseDouble(amount.getText().toString());
                 } catch (NumberFormatException e) {/*let receiveAmount be null*/}
-                showQrBitmap(btcAddress, receiveAmount, label.getText().toString(), message.getText().toString());
+                showQrBitmap(btcAddress.toString(), receiveAmount, label.getText().toString(), message.getText().toString());
             } catch (WriterException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -143,19 +185,39 @@ public class Receive extends Activity {
         qrDisplay.setImageDrawable(drawable);
     }
 
-    private class GenerateKeyTask extends AsyncTask<Void, Void, String> {
+    private void playTones(Address address) {
+        ToneGenerator toneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC, ToneGenerator.MAX_VOLUME);
+        for (byte b : address.asBytes()) {
+            toneGenerator.startTone(b >> 4);
+            try {Thread.sleep(70);} catch (InterruptedException e) {}
+            toneGenerator.startTone(b & 0x0F);
+            try {Thread.sleep(70);} catch (InterruptedException e) {}
+        }
+        toneGenerator.stopTone();
+    }
+
+    private class GenerateKeyTask extends AsyncTask<Void, Void, Address> {
 
         @Override
-        protected String doInBackground(Void... ignored) {
+        protected Address doInBackground(Void... ignored) {
             WalletOpenHelper wallet = new WalletOpenHelper(getApplicationContext());
-            String btcAddress = wallet.newKey();
+            Address btcAddress = wallet.newKey();
             return btcAddress;
         }
 
         @Override
-        protected void onPostExecute(String generatedBtcAddress) {
+        protected void onPostExecute(Address generatedBtcAddress) {
             Receive.this.btcAddress = generatedBtcAddress;
             updateQRCode();
+        }
+    }
+
+    private class DTMFTask extends AsyncTask<Address, Void, Void> {
+        @Override
+        protected Void doInBackground(Address... btcAddresses) {
+            Address btcAddress = btcAddresses[0];
+            playTones(btcAddress);
+            return null;
         }
     }
 }
