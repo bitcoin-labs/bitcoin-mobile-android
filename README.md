@@ -15,7 +15,7 @@
 
 TODO instructions
 
-#### Building/Installing tp either
+#### Building/Installing to either
 <pre>
 gradle configureRelease androidInstall
 </pre>
