@@ -1,13 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/svn/!svn/ver/49/trunk/src/com/google/bitcoin/examples
+/svn/!svn/ver/58/trunk/src/com/google/bitcoin/examples
 END
 PrivateKeys.java
 K 25
 svn:wc:ra_dav:version-url
 V 71
-/svn/!svn/ver/49/trunk/src/com/google/bitcoin/examples/PrivateKeys.java
+/svn/!svn/ver/58/trunk/src/com/google/bitcoin/examples/PrivateKeys.java
 END
 DumpWallet.java
 K 25
@@ -19,5 +19,5 @@ PingService.java
 K 25
 svn:wc:ra_dav:version-url
 V 71
-/svn/!svn/ver/49/trunk/src/com/google/bitcoin/examples/PingService.java
+/svn/!svn/ver/58/trunk/src/com/google/bitcoin/examples/PingService.java
 END

@@ -1,7 +1,7 @@
 10
 
 dir
-56
+62
 http://bitcoinj.googlecode.com/svn/trunk/src/com/google/bitcoin/bouncycastle/asn1/x509
 http://bitcoinj.googlecode.com/svn
 
@@ -60,40 +60,6 @@ hearn@google.com
 
 4146
 
-X509Extension.java
-file
-
-
-
-
-2011-04-16T21:07:51.000000Z
-b7d363a6e56dcb5578c041ca46c85397
-2011-03-07T10:17:10.024671Z
-9
-hearn@google.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-2059
-
 TBSCertList.java
 file
 
@@ -127,6 +93,40 @@ hearn@google.com
 
 
 7145
+
+X509Extension.java
+file
+
+
+
+
+2011-04-16T21:07:51.000000Z
+b7d363a6e56dcb5578c041ca46c85397
+2011-03-07T10:17:10.024671Z
+9
+hearn@google.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2059
 
 Attribute.java
 file
@@ -196,40 +196,6 @@ hearn@google.com
 
 2751
 
-RoleSyntax.java
-file
-
-
-
-
-2011-04-16T21:07:51.000000Z
-8f7247961b348a5c2b055833054aa9bb
-2011-03-07T10:17:10.024671Z
-9
-hearn@google.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-7503
-
 DSAParameter.java
 file
 
@@ -263,6 +229,40 @@ hearn@google.com
 
 
 2289
+
+RoleSyntax.java
+file
+
+
+
+
+2011-04-16T21:07:51.000000Z
+8f7247961b348a5c2b055833054aa9bb
+2011-03-07T10:17:10.024671Z
+9
+hearn@google.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7503
 
 CertificatePolicies.java
 file
@@ -298,40 +298,6 @@ hearn@google.com
 
 4073
 
-PrivateKeyUsagePeriod.java
-file
-
-
-
-
-2011-04-16T21:07:51.000000Z
-007403563e88e927617839f88b33059f
-2011-03-07T10:17:10.024671Z
-9
-hearn@google.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-2511
-
 SubjectKeyIdentifier.java
 file
 
@@ -365,6 +331,40 @@ hearn@google.com
 
 
 4038
+
+PrivateKeyUsagePeriod.java
+file
+
+
+
+
+2011-04-16T21:07:51.000000Z
+007403563e88e927617839f88b33059f
+2011-03-07T10:17:10.024671Z
+9
+hearn@google.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2511
 
 RSAPublicKeyStructure.java
 file
@@ -400,14 +400,14 @@ hearn@google.com
 
 2646
 
-X509NameEntryConverter.java
+AuthorityInformationAccess.java
 file
 
 
 
 
 2011-04-16T21:07:51.000000Z
-add444f9ed37a334f5d9d6b0217f1676
+9e73dfab0ef9c4c51cc41f6b64c9f4ee
 2011-03-07T10:17:10.024671Z
 9
 hearn@google.com
@@ -432,7 +432,7 @@ hearn@google.com
 
 
 
-3507
+3015
 
 UserNotice.java
 file
@@ -468,14 +468,14 @@ hearn@google.com
 
 3189
 
-AuthorityInformationAccess.java
+X509NameEntryConverter.java
 file
 
 
 
 
 2011-04-16T21:07:51.000000Z
-9e73dfab0ef9c4c51cc41f6b64c9f4ee
+add444f9ed37a334f5d9d6b0217f1676
 2011-03-07T10:17:10.024671Z
 9
 hearn@google.com
@@ -500,7 +500,7 @@ hearn@google.com
 
 
 
-3015
+3507
 
 ObjectDigestInfo.java
 file
@@ -1182,40 +1182,6 @@ hearn@google.com
 
 3814
 
-X509ExtensionsGenerator.java
-file
-
-
-
-
-2011-04-16T21:07:51.000000Z
-8036e46f98f2582970f28f61abc982b4
-2011-03-07T10:17:10.024671Z
-9
-hearn@google.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-2671
-
 TargetInformation.java
 file
 
@@ -1249,6 +1215,40 @@ hearn@google.com
 
 
 3352
+
+X509ExtensionsGenerator.java
+file
+
+
+
+
+2011-04-16T21:07:51.000000Z
+8036e46f98f2582970f28f61abc982b4
+2011-03-07T10:17:10.024671Z
+9
+hearn@google.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2671
 
 ExtendedKeyUsage.java
 file
@@ -1284,40 +1284,6 @@ hearn@google.com
 
 3288
 
-X509NameTokenizer.java
-file
-
-
-
-
-2011-04-16T21:07:51.000000Z
-589be6511ecfddfc27a7860d6f29924a
-2011-03-07T10:17:10.024671Z
-9
-hearn@google.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-2347
-
 AttCertIssuer.java
 file
 
@@ -1352,14 +1318,14 @@ hearn@google.com
 
 2491
 
-AccessDescription.java
+X509NameTokenizer.java
 file
 
 
 
 
 2011-04-16T21:07:51.000000Z
-e990f225ee88bff2a3329abca004a6ec
+589be6511ecfddfc27a7860d6f29924a
 2011-03-07T10:17:10.024671Z
 9
 hearn@google.com
@@ -1384,7 +1350,7 @@ hearn@google.com
 
 
 
-2722
+2347
 
 PolicyInformation.java
 file
@@ -1419,6 +1385,40 @@ hearn@google.com
 
 
 2372
+
+AccessDescription.java
+file
+
+
+
+
+2011-04-16T21:07:51.000000Z
+e990f225ee88bff2a3329abca004a6ec
+2011-03-07T10:17:10.024671Z
+9
+hearn@google.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2722
 
 X509Name.java
 file
@@ -1556,40 +1556,6 @@ hearn@google.com
 
 4759
 
-TBSCertificateStructure.java
-file
-
-
-
-
-2011-04-16T21:07:51.000000Z
-1c6d4de218acc1cd2c18ac8e4f6e58bb
-2011-03-07T10:17:10.024671Z
-9
-hearn@google.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-5388
-
 X509Attributes.java
 file
 
@@ -1623,6 +1589,40 @@ hearn@google.com
 
 
 244
+
+TBSCertificateStructure.java
+file
+
+
+
+
+2011-04-16T21:07:51.000000Z
+1c6d4de218acc1cd2c18ac8e4f6e58bb
+2011-03-07T10:17:10.024671Z
+9
+hearn@google.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5388
 
 Holder.java
 file
@@ -1658,40 +1658,6 @@ hearn@google.com
 
 6765
 
-CRLDistPoint.java
-file
-
-
-
-
-2011-04-16T21:07:52.000000Z
-25376ecef003fbe075f292d8aaa94ba0
-2011-03-07T10:17:10.024671Z
-9
-hearn@google.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-2604
-
 CertificateList.java
 file
 
@@ -1725,6 +1691,40 @@ hearn@google.com
 
 
 3141
+
+CRLDistPoint.java
+file
+
+
+
+
+2011-04-16T21:07:52.000000Z
+25376ecef003fbe075f292d8aaa94ba0
+2011-03-07T10:17:10.024671Z
+9
+hearn@google.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2604
 
 AlgorithmIdentifier.java
 file
@@ -1760,40 +1760,6 @@ hearn@google.com
 
 3364
 
-DigestInfo.java
-file
-
-
-
-
-2011-04-16T21:07:52.000000Z
-95ed4470c11568a3ae511a07bdb60c2f
-2011-03-07T10:17:10.024671Z
-9
-hearn@google.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-2234
-
 IssuingDistributionPoint.java
 file
 
@@ -1827,6 +1793,40 @@ hearn@google.com
 
 
 7970
+
+DigestInfo.java
+file
+
+
+
+
+2011-04-16T21:07:52.000000Z
+95ed4470c11568a3ae511a07bdb60c2f
+2011-03-07T10:17:10.024671Z
+9
+hearn@google.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2234
 
 Time.java
 file
@@ -1896,40 +1896,6 @@ hearn@google.com
 
 2405
 
-AuthorityKeyIdentifier.java
-file
-
-
-
-
-2011-04-16T21:07:52.000000Z
-448f578a22dd9f28733bddb9ee43e83a
-2011-03-07T10:17:10.024671Z
-9
-hearn@google.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-7019
-
 ReasonFlags.java
 file
 
@@ -1963,6 +1929,40 @@ hearn@google.com
 
 
 2626
+
+AuthorityKeyIdentifier.java
+file
+
+
+
+
+2011-04-16T21:07:52.000000Z
+448f578a22dd9f28733bddb9ee43e83a
+2011-03-07T10:17:10.024671Z
+9
+hearn@google.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7019
 
 DisplayText.java
 file

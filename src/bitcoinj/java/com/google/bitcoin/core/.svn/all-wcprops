@@ -1,13 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 50
-/svn/!svn/ver/56/trunk/src/com/google/bitcoin/core
+/svn/!svn/ver/60/trunk/src/com/google/bitcoin/core
 END
 Utils.java
 K 25
 svn:wc:ra_dav:version-url
 V 61
-/svn/!svn/ver/52/trunk/src/com/google/bitcoin/core/Utils.java
+/svn/!svn/ver/57/trunk/src/com/google/bitcoin/core/Utils.java
 END
 VerificationException.java
 K 25
@@ -37,7 +37,7 @@ TransactionOutput.java
 K 25
 svn:wc:ra_dav:version-url
 V 73
-/svn/!svn/ver/31/trunk/src/com/google/bitcoin/core/TransactionOutput.java
+/svn/!svn/ver/59/trunk/src/com/google/bitcoin/core/TransactionOutput.java
 END
 BlockStore.java
 K 25
@@ -49,7 +49,7 @@ StoredBlock.java
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/!svn/ver/50/trunk/src/com/google/bitcoin/core/StoredBlock.java
+/svn/!svn/ver/59/trunk/src/com/google/bitcoin/core/StoredBlock.java
 END
 AddressFormatException.java
 K 25
@@ -85,7 +85,7 @@ Transaction.java
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/!svn/ver/26/trunk/src/com/google/bitcoin/core/Transaction.java
+/svn/!svn/ver/59/trunk/src/com/google/bitcoin/core/Transaction.java
 END
 BlockStoreException.java
 K 25
@@ -97,31 +97,19 @@ TransactionOutPoint.java
 K 25
 svn:wc:ra_dav:version-url
 V 75
-/svn/!svn/ver/31/trunk/src/com/google/bitcoin/core/TransactionOutPoint.java
+/svn/!svn/ver/59/trunk/src/com/google/bitcoin/core/TransactionOutPoint.java
 END
 Wallet.java
 K 25
 svn:wc:ra_dav:version-url
 V 62
-/svn/!svn/ver/47/trunk/src/com/google/bitcoin/core/Wallet.java
+/svn/!svn/ver/59/trunk/src/com/google/bitcoin/core/Wallet.java
 END
 VersionMessage.java
 K 25
 svn:wc:ra_dav:version-url
 V 70
-/svn/!svn/ver/34/trunk/src/com/google/bitcoin/core/VersionMessage.java
-END
-WalletEventListener.java
-K 25
-svn:wc:ra_dav:version-url
-V 75
-/svn/!svn/ver/37/trunk/src/com/google/bitcoin/core/WalletEventListener.java
-END
-MemoryBlockStore.java
-K 25
-svn:wc:ra_dav:version-url
-V 72
-/svn/!svn/ver/49/trunk/src/com/google/bitcoin/core/MemoryBlockStore.java
+/svn/!svn/ver/58/trunk/src/com/google/bitcoin/core/VersionMessage.java
 END
 ECKey.java
 K 25
@@ -129,11 +117,23 @@ svn:wc:ra_dav:version-url
 V 61
 /svn/!svn/ver/51/trunk/src/com/google/bitcoin/core/ECKey.java
 END
+MemoryBlockStore.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/49/trunk/src/com/google/bitcoin/core/MemoryBlockStore.java
+END
+WalletEventListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/37/trunk/src/com/google/bitcoin/core/WalletEventListener.java
+END
 PeerAddress.java
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/!svn/ver/34/trunk/src/com/google/bitcoin/core/PeerAddress.java
+/svn/!svn/ver/58/trunk/src/com/google/bitcoin/core/PeerAddress.java
 END
 VarInt.java
 K 25
@@ -151,19 +151,19 @@ NetworkConnection.java
 K 25
 svn:wc:ra_dav:version-url
 V 73
-/svn/!svn/ver/42/trunk/src/com/google/bitcoin/core/NetworkConnection.java
-END
-Sha256Hash.java
-K 25
-svn:wc:ra_dav:version-url
-V 66
-/svn/!svn/ver/49/trunk/src/com/google/bitcoin/core/Sha256Hash.java
+/svn/!svn/ver/58/trunk/src/com/google/bitcoin/core/NetworkConnection.java
 END
 InventoryItem.java
 K 25
 svn:wc:ra_dav:version-url
 V 68
 /svn/!svn/ver/9/trunk/src/com/google/bitcoin/core/InventoryItem.java
+END
+Sha256Hash.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/60/trunk/src/com/google/bitcoin/core/Sha256Hash.java
 END
 NetworkParameters.java
 K 25
@@ -205,7 +205,7 @@ Block.java
 K 25
 svn:wc:ra_dav:version-url
 V 61
-/svn/!svn/ver/49/trunk/src/com/google/bitcoin/core/Block.java
+/svn/!svn/ver/59/trunk/src/com/google/bitcoin/core/Block.java
 END
 Peer.java
 K 25
@@ -217,5 +217,5 @@ BlockChain.java
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/!svn/ver/56/trunk/src/com/google/bitcoin/core/BlockChain.java
+/svn/!svn/ver/59/trunk/src/com/google/bitcoin/core/BlockChain.java
 END
