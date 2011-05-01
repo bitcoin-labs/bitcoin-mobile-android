@@ -127,6 +127,7 @@ public class Receive extends Activity {
             return super.onOptionsItemSelected(item);
         }
     }
+
     private void updateQRCode() {
         if (btcAddress != null) {
             btcAddressView.setText("Address:\n" + btcAddress);
@@ -137,7 +138,6 @@ public class Receive extends Activity {
                 } catch (NumberFormatException e) {/*let receiveAmount be null*/}
                 showQrBitmap(btcAddress.toString(), receiveAmount, label.getText().toString(), message.getText().toString());
             } catch (WriterException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -188,10 +188,10 @@ public class Receive extends Activity {
     private void playTones(Address address) {
         ToneGenerator toneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC, ToneGenerator.MAX_VOLUME);
         for (byte b : address.asBytes()) {
-            toneGenerator.startTone(b >> 4);
-            try {Thread.sleep(70);} catch (InterruptedException e) {}
-            toneGenerator.startTone(b & 0x0F);
-            try {Thread.sleep(70);} catch (InterruptedException e) {}
+            toneGenerator.startTone(b >> 4, 45);
+            try {Thread.sleep(50);} catch (InterruptedException e) {}
+            toneGenerator.startTone(b & 0x0F, 45);
+            try {Thread.sleep(50);} catch (InterruptedException e) {}
         }
         toneGenerator.stopTone();
     }

@@ -1,11 +1,11 @@
 
 buildscript {
   repositories {
+    mavenCentral()
     mavenRepo(urls: 'http://jvoegele.com/maven2/')
   }
   dependencies {
     classpath 'com.jvoegele.gradle.plugins:android-plugin:1.0.0-SNAPSHOT'
-    classpath 'com.google.zxing:zxing-javase:1.6'
   }
 }
 apply plugin: 'android'
@@ -16,9 +16,10 @@ repositories {
 }
 dependencies {
     compile 'com.google.zxing:zxing-core:1.6'
+    compile 'com.google.code.gson:gson:1.7.1'
 }
 // Sets the package version
-version = "0.0.2-SNAPSHOT"
+version = "0.0.3-SNAPSHOT"
 // Signing configuration, valid for all builds (1)
 //androidPackage {
 //	keyStore = "path/to/my/keystore"
