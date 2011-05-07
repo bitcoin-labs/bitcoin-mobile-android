@@ -141,6 +141,10 @@ public class ECKey implements Serializable {
         return pub;
     }
 
+    public BigInteger getPrivKey() {
+        return priv;
+    }
+
     public String toString() {
         StringBuffer b = new StringBuffer();
         b.append("pub:").append(Utils.bytesToHexString(pub));

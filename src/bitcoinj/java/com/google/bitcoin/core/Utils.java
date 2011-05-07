@@ -194,7 +194,24 @@ public class Utils {
         }
         return buf.toString();
     }
-    
+
+    public static byte[] hexStringToBytes(String hex) {
+        int size = hex.length() / 2;
+        byte[] data = new byte[size];
+        for(int i = 0; i < size; i++) {
+            data[i] = (byte)((decodeHexNibble(hex.charAt(2 * i)) << 4) + decodeHexNibble(hex.charAt(2 * i + 1)));
+        }
+        return data;
+    }
+
+    private static int decodeHexNibble(int n) {
+        if ((0x30 <= n) && (n <= 0x39)) {return n - 0x30;}
+        else if ((0x61 <= n) && (n <= 0x66)) {return (n - 0x61) + 10;}
+        else if ((0x41 <= n) && (n <= 0x46)) {return (n - 0x41) + 10;}
+        else {
+            throw new RuntimeException();
+        }
+    }
 
     /** Returns a copy of the given byte array in reverse order. */
     public static byte[] reverseBytes(byte[] bytes) {
