@@ -15,12 +15,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class WalletOpenHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "test2";
-    private static final int DATABASE_VERSION = 2;
-    
+    private static final String DATABASE_NAME = "keys";
+    private static final int DATABASE_VERSION = 1;
+
     public static final String KEY = "key";
     public static final String ADDRESS = "address58";
-    
 
     WalletOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -39,7 +38,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
     public void onUpgrade (SQLiteDatabase db, int oldVersion, int newVersion){
         onCreate(db);
     }
-    
+
     public Address newKey() {
         ECKey key = new ECKey();
         Address address = addKey(key);
@@ -51,11 +50,11 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         Address address = key.toAddress(NetworkParameters.prodNet());
         db.execSQL(
                 "INSERT INTO keys ('address58', 'key') VALUES (?, ?)",
-                new Object[] { address.toString(), key.toASN1()} );
+                new Object[] { address.toString(), key.getPrivKey().toByteArray()} );
         db.close();
         return address;
     }
-    
+
     public Cursor getAddresses() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query("keys", new String[]{ADDRESS}, null, null, null, null, null, "5");
