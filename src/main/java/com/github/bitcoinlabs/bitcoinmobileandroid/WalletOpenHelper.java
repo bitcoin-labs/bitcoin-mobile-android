@@ -3,6 +3,7 @@ package com.github.bitcoinlabs.bitcoinmobileandroid;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.math.BigInteger;
 
 import com.google.bitcoin.core.Address;
 import com.google.bitcoin.core.ECKey;
@@ -53,6 +54,17 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
                 new Object[] { address.toString(), key.getPrivKey().toByteArray()} );
         db.close();
         return address;
+    }
+
+    public ECKey getKey(String address58) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query("keys", new String[]{KEY}, "address58 = ?", new String[]{address58}, null, null, null, "1");
+        if (cursor.getCount() == 0) {
+            return null;
+        }
+        else {
+            return new ECKey(new BigInteger(cursor.getBlob(0)));
+        }
     }
 
     public Cursor getAddresses() {
