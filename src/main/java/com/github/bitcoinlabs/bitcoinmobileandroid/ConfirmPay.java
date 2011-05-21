@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.bitcoin.core.TransactionStandaloneEncoder;
+import com.google.bitcoin.core.NetworkParameters;
+import com.google.bitcoin.core.Transaction;
 
 /**
  * Created by IntelliJ IDEA.
@@ -46,18 +49,33 @@ public class ConfirmPay extends Activity
         payLabel.setText(label);
         payMessage.setText(message);
         
+        // TODO: lossless parsing
         double amountD = 0.0;
         try {
             amountD = Double.parseDouble(amount);
         } catch (Exception e) {
         }
+        final long amountSatoshis = (long)(amountD * 1e8);
+        
         payAmount.setText(MoneyUtils.formatMoney(amountD));
         payAmount.setSelectAllOnFocus(true);
         findViewById(R.id.confirmButton).setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View view)
             {
-                Toast.makeText(ConfirmPay.this, payAmount.getText() + "BTC paid to " + payLabel.getText() + " (" + bitcoinAddress + ")" , Toast.LENGTH_LONG).show();
+                WalletOpenHelper helper = new WalletOpenHelper(getApplicationContext());
+                Transaction tx = helper.createTransaction(amountSatoshis, bitcoinAddress);
+                if (tx == null) {
+                    Toast.makeText(ConfirmPay.this, "Insufficient balance." , Toast.LENGTH_LONG).show();
+                }
+                else {
+                    byte[] msg = tx.bitcoinSerialize();
+                    
+                    // TODO log to DB
+                    // TODO send msg
+                    
+                    Toast.makeText(ConfirmPay.this, payAmount.getText() + "BTC paid to " + payLabel.getText() + " (" + bitcoinAddress + ")" , Toast.LENGTH_LONG).show();
+                }
                 finish();
             }
         });
