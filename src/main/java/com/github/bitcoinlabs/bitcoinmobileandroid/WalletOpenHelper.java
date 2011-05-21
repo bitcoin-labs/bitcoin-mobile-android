@@ -148,7 +148,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         Cursor cursor = db.query("outpoints", new String[]{"id", HASH, ADDRESS, N, SATOSHIS}, "spent = 0", null, null, null, null, null);
         cursor.moveToFirst();
         while ((satoshisGathered < targetSatoshis) && (cursor.isAfterLast() == false)) {
-            in_ids.add(cursor.getInt(0))
+            in_ids.add(cursor.getInt(0));
             in_hashes.add(cursor.getBlob(1));
             in_addresses.add(cursor.getString(2));
             in_indexes.add(cursor.getInt(3));
