@@ -15,10 +15,18 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.HashMap;
+import java.math.BigInteger;
+import com.google.bitcoin.core.Transaction;
+import com.google.bitcoin.core.TransactionStandaloneEncoder;
+import com.google.bitcoin.core.NetworkParameters;
+
+
+
 public class WalletOpenHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "keys";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public static final String KEY = "key";
     public static final String ADDRESS = "address58";
@@ -122,5 +130,69 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
             satoshis += cursor.getLong(0);
         }
         return satoshis;
+    }
+
+    public Transaction createTransaction(long targetSatoshis, String destAddress) {
+        
+        long satoshisGathered = 0;
+        
+        ArrayList<String> in_addresses = new ArrayList<String>();
+        ArrayList<byte[]> in_hashes = new ArrayList<byte[]>();
+        ArrayList<Integer> in_indexes = new ArrayList<Integer>();
+        
+        HashMap<String, ECKey> address_key_map = new HashMap<String, ECKey>();
+        
+        SQLiteDatabase db = getReadableDatabase();
+        
+        // Read outpoints
+        Cursor cursor = db.query("outpoints", new String[]{HASH, ADDRESS, N, SATOSHIS}, null, null, null, null, null, null);
+        cursor.moveToFirst();
+        while ((satoshisGathered < targetSatoshis) && (cursor.isAfterLast() == false)) {
+            in_hashes.add(cursor.getBlob(0));
+            in_addresses.add(cursor.getString(1));
+            in_indexes.add(cursor.getInt(2));
+            satoshisGathered += cursor.getLong(3);
+        }
+        if (satoshisGathered < targetSatoshis) {
+            return null;
+        }
+        
+        // Read keys
+        String whereClause = "(" + ADDRESS + " in (";
+        for (int i = 0; i < in_addresses.size(); i++) {
+            if (i > 0) {
+                whereClause += ", ";
+            }
+            whereClause += "'" + in_addresses.get(i) + "'";
+        }
+        whereClause += "))";
+        cursor = db.query("keys", new String[]{ADDRESS, KEY}, whereClause, null, null, null, null, null);
+        cursor.moveToFirst();
+        while ((satoshisGathered < targetSatoshis) && (cursor.isAfterLast() == false)) {
+            address_key_map.put(
+                cursor.getString(0),
+                new ECKey(new BigInteger(cursor.getBlob(1))));
+        }
+        
+        // Create transaction
+        TransactionStandaloneEncoder tse = new TransactionStandaloneEncoder(NetworkParameters.prodNet());
+        for (int i = 0; i < in_addresses.size(); i++) {
+            tse.addInput(
+                    address_key_map.get(in_addresses.get(i)),
+                    in_indexes.get(i).intValue(),
+                    in_hashes.get(i));
+        }
+        try {
+            tse.addOutput(new BigInteger("" + targetSatoshis), destAddress);
+            if (satoshisGathered < targetSatoshis) {
+                BigInteger changeSatoshis = new BigInteger("" + (satoshisGathered - targetSatoshis));
+                tse.addOutput(changeSatoshis, getUnusedAddress().toString());
+            }
+        }
+        catch (AddressFormatException e) {
+            // TODO: handle better
+            throw new RuntimeException("Invalid address!");
+        }
+        return tse.createSignedTransaction();
     }
 }
