@@ -1,4 +1,3 @@
-
 package com.github.bitcoinlabs.bitcoinmobileandroid;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import android.database.sqlite.SQLiteDatabase;
 public class WalletOpenHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "keys";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public static final String KEY = "key";
     public static final String ADDRESS = "address58";
