@@ -1,4 +1,3 @@
-
 package com.github.bitcoinlabs.bitcoinmobileandroid;
 
 import java.util.ArrayList;
