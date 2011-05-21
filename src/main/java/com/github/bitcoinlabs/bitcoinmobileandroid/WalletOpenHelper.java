@@ -138,19 +138,21 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         ArrayList<String> in_addresses = new ArrayList<String>();
         ArrayList<byte[]> in_hashes = new ArrayList<byte[]>();
         ArrayList<Integer> in_indexes = new ArrayList<Integer>();
+        ArrayList<Integer> in_ids = new ArrayList<Integer>();
         
         HashMap<String, ECKey> address_key_map = new HashMap<String, ECKey>();
         
-        SQLiteDatabase db = getReadableDatabase();
+        SQLiteDatabase db = getWritableDatabase();
         
         // Read outpoints
-        Cursor cursor = db.query("outpoints", new String[]{HASH, ADDRESS, N, SATOSHIS}, null, null, null, null, null, null);
+        Cursor cursor = db.query("outpoints", new String[]{"id", HASH, ADDRESS, N, SATOSHIS}, "spent = 0", null, null, null, null, null);
         cursor.moveToFirst();
         while ((satoshisGathered < targetSatoshis) && (cursor.isAfterLast() == false)) {
-            in_hashes.add(cursor.getBlob(0));
-            in_addresses.add(cursor.getString(1));
-            in_indexes.add(cursor.getInt(2));
-            satoshisGathered += cursor.getLong(3);
+            in_ids.add(cursor.getInt(0))
+            in_hashes.add(cursor.getBlob(1));
+            in_addresses.add(cursor.getString(2));
+            in_indexes.add(cursor.getInt(3));
+            satoshisGathered += cursor.getLong(4);
         }
         if (satoshisGathered < targetSatoshis) {
             return null;
@@ -174,6 +176,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         }
         
         // Create transaction
+        Transaction tx;
         TransactionStandaloneEncoder tse = new TransactionStandaloneEncoder(NetworkParameters.prodNet());
         for (int i = 0; i < in_addresses.size(); i++) {
             tse.addInput(
@@ -192,6 +195,19 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
             // TODO: handle better
             throw new RuntimeException("Invalid address!");
         }
-        return tse.createSignedTransaction();
+        tx = tse.createSignedTransaction();
+        
+        // Spend outpoints
+        whereClause = "(id in (";
+        for (int i = 0; i < in_ids.size(); i++) {
+            if (i > 0) {
+                whereClause += ", ";
+            }
+            whereClause += "'" + in_ids.get(i).intValue() + "'";
+        }
+        whereClause += "))";
+        db.execSQL("UPDATE outpoints SET spent = 1 WHERE " + whereClause);
+        
+        return tx;
     }
 }
