@@ -5,12 +5,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -35,7 +38,7 @@ import com.google.gson.Gson;
 
 public class Bitcoin extends Activity
 {
-    public static final String BITCOIN_EXIT_NODE_BALANCE = "";
+    public static final String BITCOIN_EXIT_NODE_BALANCE = "http://97.107.139.194:8000/api/unspent-outpoints.js";
     private TextView balanceStatusView;
     private TextView balanceView;
     private TextView balanceUnconfirmedView;
@@ -88,7 +91,7 @@ public class Bitcoin extends Activity
 
     private void refreshBalance() {
         balanceStatusView.setText("Refreshing...");
-        new RefreshBalanceTask().execute();
+        new RefreshOutpointsTask().execute();
     }
 
     private void callScan()
@@ -124,10 +127,10 @@ public class Bitcoin extends Activity
         }
     }
 
-    private class RefreshBalanceTask extends AsyncTask<Void, Void, BalanceResponse> {
+    private class RefreshOutpointsTask extends AsyncTask<Void, Void, OutpointsResponse> {
 
         @Override
-        protected BalanceResponse doInBackground(Void... params) {
+        protected OutpointsResponse doInBackground(Void... params) {
 
             int TIMEOUT_MILLISEC = 10000;  // = 10 seconds
             HttpParams httpParams = new BasicHttpParams();
@@ -135,7 +138,8 @@ public class Bitcoin extends Activity
             HttpConnectionParams.setSoTimeout(httpParams, TIMEOUT_MILLISEC);
             HttpClient client = new DefaultHttpClient(httpParams);
 
-            HttpPost request = new HttpPost(BITCOIN_EXIT_NODE_BALANCE);
+//            HttpPost request = new HttpPost(BITCOIN_EXIT_NODE_BALANCE);
+            HttpGet request;
             Gson gson = new Gson();
 
             WalletOpenHelper wallet = new WalletOpenHelper(getApplicationContext());
@@ -148,33 +152,43 @@ public class Bitcoin extends Activity
                 i++;
                 addressesCursor.moveToNext();
             }
-            String postMessage = gson.toJson(btcAddresses);
+//            String postMessage = gson.toJson(btcAddresses);
             HttpResponse response = null;
-            BalanceResponse balanceResponse = null;
+            OutpointsResponse outpointsResponse = null;
             try {
-                request.setEntity(new ByteArrayEntity(postMessage.toString().getBytes("UTF8")));
+                request = new HttpGet(BITCOIN_EXIT_NODE_BALANCE + "?addresses=" + commaSeparate(btcAddresses));
+
                 response = client.execute(request);
                 HttpEntity responseEntity = response.getEntity();
                 InputStream content = responseEntity.getContent();
                 Reader reader = new InputStreamReader(content);
-                balanceResponse = gson.fromJson(reader, BalanceResponse.class);
-                if (balanceResponse == null) {
-                    balanceResponse = new BalanceResponse(System.currentTimeMillis(), (long)(1.23 * MoneyUtils.SATOSHIS_PER_BITCOIN), (long)(3.21 * MoneyUtils.SATOSHIS_PER_BITCOIN));
-                }
+                outpointsResponse = gson.fromJson(reader, OutpointsResponse.class);
             } catch (Exception e) {
-                balanceResponse = new BalanceResponse(e, null);
+                outpointsResponse = new OutpointsResponse(e, null);
             }
-            return balanceResponse;
+            return outpointsResponse;
+        }
+
+        private String commaSeparate(String[] strings) {
+            if (strings == null || strings.length < 1) {
+                throw new IllegalArgumentException("strings array must have at least one string");
+            }
+            return Arrays.toString(strings).replaceAll("[\\[\\] ]", "");
         }
 
         @Override
-        protected void onPostExecute(BalanceResponse balanceResponse) {
-            if (balanceResponse.isError()) {
-                balanceStatusView.setText(balanceResponse.getException() + ": " + balanceResponse.getServerError());
+        protected void onPostExecute(OutpointsResponse outpointsResponse) {
+            if (outpointsResponse.isError()) {
+                balanceStatusView.setText(outpointsResponse.getException() + ": " + outpointsResponse.getServerError());
             } else {
-                balanceStatusView.setText("Last checked: " + new Date(balanceResponse.getTimeStamp()));
-                balanceView.setText(MoneyUtils.formatSatoshisAsBtcString(balanceResponse.getSatoshisConfirmed()));
-                balanceUnconfirmedView.setText(MoneyUtils.formatSatoshisAsBtcString(balanceResponse.getSatoshisUnconfirmed()));
+                balanceStatusView.setText("Last checked: " + new Date(outpointsResponse.getTimeStamp()));
+                Collection<Outpoint> unspent_outpoints = outpointsResponse.getUnspent_outpoints();
+                long satoshis = 0;
+                for (Outpoint outpoint : unspent_outpoints) {
+                    satoshis += outpoint.getSatoshis();
+                }
+                balanceView.setText(MoneyUtils.formatSatoshisAsBtcString(satoshis));
+                balanceUnconfirmedView.setText(MoneyUtils.formatSatoshisAsBtcString(0));
             }
         }
     }

@@ -201,8 +201,10 @@ public class Receive extends Activity {
         @Override
         protected Address doInBackground(Void... ignored) {
             WalletOpenHelper wallet = new WalletOpenHelper(getApplicationContext());
-            Address btcAddress = wallet.newKey();
-            return btcAddress;
+            //Address btcAddress = wallet.newKey();
+            //TODO come up with a more sane key gen/recycle process
+            Address unusedAddress = wallet.getUnusedAddress();
+            return unusedAddress;
         }
 
         @Override

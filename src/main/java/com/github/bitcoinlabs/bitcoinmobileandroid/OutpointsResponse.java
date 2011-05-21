@@ -1,40 +1,29 @@
 package com.github.bitcoinlabs.bitcoinmobileandroid;
 
-public class BalanceResponse {
+import java.util.Collection;
+
+public class OutpointsResponse {
     final private long timeStamp;
-    final private long satoshisConfirmed;
-    final private long satoshisUnconfirmed;
     final private Exception exception;
     final private String serverError;
+    final private Collection<Outpoint> unspent_outpoints;
     
-    public BalanceResponse(long timeStamp, long satoshisConfirmed, long satoshisUnconfirmed) {
+    public OutpointsResponse(long timeStamp, Collection<Outpoint> unspent_outpoints) {
         this.timeStamp = timeStamp;
-        this.satoshisConfirmed = satoshisConfirmed;
-        this.satoshisUnconfirmed = satoshisUnconfirmed;
+        this.unspent_outpoints = unspent_outpoints;
         this.exception = null;
         this.serverError = null;
     }
     
-    public BalanceResponse(Exception exception, String serverError) {
+    public OutpointsResponse(Exception exception, String serverError) {
         this.exception = exception;
         this.serverError = serverError;
+        this.unspent_outpoints = null;
         this.timeStamp = System.currentTimeMillis();
-        this.satoshisConfirmed = Long.MIN_VALUE;
-        this.satoshisUnconfirmed = Long.MIN_VALUE;
     }
 
     public long getTimeStamp() {
         return timeStamp;
-    }
-
-    public long getSatoshisConfirmed() {
-        checkValidResponse();
-        return satoshisConfirmed;
-    }
-
-    public long getSatoshisUnconfirmed() {
-        checkValidResponse();
-        return satoshisUnconfirmed;
     }
 
     private void checkValidResponse() {
@@ -53,5 +42,9 @@ public class BalanceResponse {
 
     public String getServerError() {
         return serverError;
+    }
+
+    public Collection<Outpoint> getUnspent_outpoints() {
+        return unspent_outpoints;
     }
 }

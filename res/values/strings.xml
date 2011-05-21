@@ -5,6 +5,9 @@
     <string name="receiveAmountLabel">Receive Amount</string>
     <string name="recieveLabelLabel">Name</string>
     <string name="receiveMessageLabel">Message</string>
+    <string name="outpoint_service_started">Started</string>
+    <string name="outpoint_service_stopped">Stopped</string>
+    <string name="outpoint_service_label">Outpoint Service</string>
     <string-array name="btcAddresses">
         <item>185fv9g323aTbGK2BC9H4x3NGtMbFNKusF</item>
     </string-array>
