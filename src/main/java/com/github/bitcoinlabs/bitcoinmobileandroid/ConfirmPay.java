@@ -33,7 +33,8 @@ public class ConfirmPay extends Activity
         double val = 0;
         Uri bitcoinUri = getIntent().getData();
         assert("bitcoin".equals(bitcoinUri.getScheme()));
-        //hackity hackity
+        
+        // Hacky. Parses "bitcoin:...address..."
         bitcoinUri = Uri.parse("bitcoin://" + bitcoinUri.getEncodedSchemeSpecificPart());
 
         final String bitcoinAddress = bitcoinUri.getAuthority();
