@@ -39,7 +39,7 @@ public class ConfirmPay extends Activity
 {
     public static final String CONFIRM_PAY_URI = "CONFIRM_PAY_URI";
     int TIMEOUT_MS = 10000;
-    long FEE_SATOSHIS = 1000000;
+    long FEE_SATOSHIS = 50000;
 
     public void onCreate(Bundle savedInstanceState)
     {
