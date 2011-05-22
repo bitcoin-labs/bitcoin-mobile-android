@@ -1,4 +1,9 @@
-package com.github.bitcoinlabs.bitcoinmobileandroid;
+package com.bitcoinlabs.android;
+
+import com.github.bitcoinlabs.bitcoinmobileandroid.R;
+import com.github.bitcoinlabs.bitcoinmobileandroid.R.id;
+import com.github.bitcoinlabs.bitcoinmobileandroid.R.layout;
+import com.github.bitcoinlabs.bitcoinmobileandroid.R.menu;
 
 import android.app.Activity;
 import android.content.ComponentName;

@@ -1,4 +1,4 @@
-package com.github.bitcoinlabs.bitcoinmobileandroid;
+package com.bitcoinlabs.android;
 
 import java.text.DecimalFormat;
 

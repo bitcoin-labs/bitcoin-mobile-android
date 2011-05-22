@@ -1,4 +1,4 @@
-package com.github.bitcoinlabs.bitcoinmobileandroid;
+package com.bitcoinlabs.android;
 
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -36,6 +36,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.github.bitcoinlabs.bitcoinmobileandroid.R;
+import com.github.bitcoinlabs.bitcoinmobileandroid.R.id;
+import com.github.bitcoinlabs.bitcoinmobileandroid.R.layout;
+import com.github.bitcoinlabs.bitcoinmobileandroid.R.menu;
 import com.google.bitcoin.core.Address;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;

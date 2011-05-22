@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.github.bitcoinlabs.bitcoinmobileandroid"
+      package="com.bitcoinlabs.android"
       android:versionCode="1"
       android:versionName="1.0">
     <uses-sdk android:minSdkVersion="7" />
     <uses-permission android:name="android.permission.INTERNET" />
     <application android:label="Bitcoin" android:icon="@drawable/icon">
-        <activity android:name="Bitcoin"
-                  android:label="@string/app_name"
-                android:configChanges="orientation|keyboard|keyboardHidden">
+        <activity android:name=".Bitcoin" android:label="@string/app_name" android:configChanges="orientation|keyboard|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -24,10 +22,7 @@
                 <data android:scheme="bitcoin" />
             </intent-filter>
         </activity>
-        <service
-            android:name=".OutpointService"
-            android:label="Bitcoin Outpoint Service"
-            android:process=":outpoint">
+        <service android:name=".OutpointService" android:label="Bitcoin Outpoint Service" android:process=":outpoint">
         </service>
     </application>
 </manifest> 

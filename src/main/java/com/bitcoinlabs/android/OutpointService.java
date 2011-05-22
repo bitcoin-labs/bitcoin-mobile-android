@@ -1,4 +1,4 @@
-package com.github.bitcoinlabs.bitcoinmobileandroid;
+package com.bitcoinlabs.android;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,6 +16,9 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.json.JSONObject;
 
+import com.github.bitcoinlabs.bitcoinmobileandroid.R;
+import com.github.bitcoinlabs.bitcoinmobileandroid.R.drawable;
+import com.github.bitcoinlabs.bitcoinmobileandroid.R.string;
 import com.google.bitcoin.core.Address;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

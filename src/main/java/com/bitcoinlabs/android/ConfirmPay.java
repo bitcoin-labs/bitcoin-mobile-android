@@ -1,4 +1,4 @@
-package com.github.bitcoinlabs.bitcoinmobileandroid;
+package com.bitcoinlabs.android;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,6 +26,9 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.BasicHttpParams;
 
+import com.github.bitcoinlabs.bitcoinmobileandroid.R;
+import com.github.bitcoinlabs.bitcoinmobileandroid.R.id;
+import com.github.bitcoinlabs.bitcoinmobileandroid.R.layout;
 import com.google.bitcoin.core.TransactionStandaloneEncoder;
 import com.google.bitcoin.core.NetworkParameters;
 import com.google.bitcoin.core.Transaction;
