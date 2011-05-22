@@ -117,7 +117,6 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         if (cursor.getCount() > 0) {
             cursor.moveToNext();
             String addressString = cursor.getString(0);
-            cursor.close();
             try {
                 btcAddress = new Address(NetworkParameters.prodNet(), addressString);
             } catch (AddressFormatException e) {
@@ -126,29 +125,33 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         } else {
             btcAddress = newKey();
         }
+        cursor.close();
+        db.close();
         return btcAddress;
     }
 
     public void add(OutpointsResponse outpointsResponse) {
-        SQLiteDatabase db = getWritableDatabase();
         Collection<Outpoint> outpoints = outpointsResponse.getUnspent_outpoints();
-        for (Outpoint outpoint : outpoints) {
-            outpoint.getAddress();
-            try {
-                ContentValues values = new ContentValues();
-                values.put(HASH, Utils.hexStringToBytes(outpoint.getHash()));
-                values.put(ADDRESS, outpoint.getAddress());
-                values.put(N, outpoint.getIndex());
-                values.put(SATOSHIS, outpoint.getSatoshis());
-                db.insertOrThrow("outpoints", null, values );
-            } catch (SQLiteConstraintException e) {
-                //do nothing as we will assume we already have a record of this outpoint.
-                //TODO verify that we have the right ADDRESS and SATOSHIS for this outpoint
+        if (outpoints != null && outpoints.size() > 0) {
+            SQLiteDatabase db = getWritableDatabase();
+            for (Outpoint outpoint : outpoints) {
+                outpoint.getAddress();
+                try {
+                    ContentValues values = new ContentValues();
+                    values.put(HASH, Utils.hexStringToBytes(outpoint.getHash()));
+                    values.put(ADDRESS, outpoint.getAddress());
+                    values.put(N, outpoint.getIndex());
+                    values.put(SATOSHIS, outpoint.getSatoshis());
+                    db.insertOrThrow("outpoints", null, values );
+                } catch (SQLiteConstraintException e) {
+                    //do nothing as we will assume we already have a record of this outpoint.
+                    //TODO verify that we have the right ADDRESS and SATOSHIS for this outpoint
+                }
             }
+            db.close();
         }
-        db.close();
     }
-    
+
     public long getBalance() {
         long satoshis = 0;
         SQLiteDatabase db = getReadableDatabase();

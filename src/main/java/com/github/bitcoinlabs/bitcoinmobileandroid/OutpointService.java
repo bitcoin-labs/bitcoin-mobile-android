@@ -3,6 +3,8 @@ package com.github.bitcoinlabs.bitcoinmobileandroid;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -12,9 +14,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.json.JSONObject;
 
 import com.google.bitcoin.core.Address;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -135,7 +142,24 @@ public class OutpointService extends IntentService {
             HttpEntity responseEntity = response.getEntity();
             InputStream content = responseEntity.getContent();
             Reader reader = new InputStreamReader(content);
-            outpointsResponse = gson.fromJson(reader, OutpointsResponse.class);
+//            gradle android plugin doesn't yet allow for custom proguard settings needed for gson.fromJson
+//            outpointsResponse = gson.fromJson(reader, OutpointsResponse.class);
+            JsonParser parser = new JsonParser();
+            JsonObject outpointsResponseJSON = parser.parse(reader).getAsJsonObject();
+            Log.i(getClass().getSimpleName()+"", outpointsResponseJSON+"");
+            long timestamp = 0;
+//            timestamp = outpointsResponseJSON.get("timestamp").getAsLong();
+            JsonArray outpointsJSON = outpointsResponseJSON.get("unspent_outpoints").getAsJsonArray();
+            List<Outpoint> outpoints = new ArrayList<Outpoint>(outpointsJSON.size());
+            for (JsonElement outpointJSON : outpointsJSON) {
+                String hash = outpointJSON.getAsJsonObject().get("hash").getAsString();
+                int n = outpointJSON.getAsJsonObject().get("n").getAsInt();
+                long satoshis = outpointJSON.getAsJsonObject().get("satoshis").getAsLong();
+                String opAddress = outpointJSON.getAsJsonObject().get("address").getAsString();
+                Outpoint outpoint = new Outpoint(opAddress, hash, n, satoshis);
+                outpoints.add(outpoint);
+            }
+            outpointsResponse = new OutpointsResponse(timestamp, outpoints);
             wallet.add(outpointsResponse);
             Log.i(getClass().getSimpleName()+"", outpointsResponse+"");
         } catch (Exception e) {

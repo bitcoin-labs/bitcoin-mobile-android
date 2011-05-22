@@ -1,10 +1,11 @@
 package com.github.bitcoinlabs.bitcoinmobileandroid;
 
+
 public class Outpoint {
-    private String address;
-    private String hash;
-    private int n;
-    private long satoshis;
+    final private String address;
+    final private String hash;
+    final private int n;
+    final private long satoshis;
 
     public Outpoint(String address, String hash, int n, long satoshis) {
         super();
@@ -18,32 +19,16 @@ public class Outpoint {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getHash() {
         return hash;
-    }
-
-    public void setHash(String hash) {
-        this.hash = hash;
     }
 
     public int getIndex() {
         return n;
     }
 
-    public void setIndex(int index) {
-        this.n = index;
-    }
-
     public long getSatoshis() {
         return satoshis;
-    }
-
-    public void setSatoshis(long satoshis) {
-        this.satoshis = satoshis;
     }
 
     @Override
