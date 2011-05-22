@@ -72,7 +72,7 @@ public class Bitcoin extends Activity
 
     private void refreshOutpoints() {
 //      refreshButton.setEnabled(false);
-        balanceStatusView.setText("Refreshing...");
+//        balanceStatusView.setText("Refreshing...");
         startService(new Intent(getApplicationContext(), OutpointService.class));
     }
 
@@ -108,52 +108,52 @@ public class Bitcoin extends Activity
             }
         }
     }
-    private OutpointService outpointService;
-
-    private ServiceConnection outpointServiceConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            // This is called when the connection with the service has been
-            // established, giving us the service object we can use to
-            // interact with the service.  Because we have bound to a explicit
-            // service that we know is running in our own process, we can
-            // cast its IBinder to a concrete class and directly access it.
-            outpointService = ((OutpointService.OutpointBinder)service).getService();
-
-            // Tell the user about this for our demo.
-            Toast.makeText(Bitcoin.this, R.string.outpoint_service_connected, Toast.LENGTH_SHORT).show();
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            // This is called when the connection with the service has been
-            // unexpectedly disconnected -- that is, its process crashed.
-            // Because it is running in our same process, we should never
-            // see this happen.
-            outpointService = null;
-            Toast.makeText(Bitcoin.this, R.string.outpoint_service_disconnected, Toast.LENGTH_SHORT).show();
-        }
-    };
-    private boolean isOutpointServiceBound;
-
-    void doBindService() {
-        // Establish a connection with the service.  We use an explicit
-        // class name because we want a specific service implementation that
-        // we know will be running in our own process (and thus won't be
-        // supporting component replacement by other applications).
-        bindService(new Intent(Bitcoin.this, OutpointService.class), outpointServiceConnection, Context.BIND_AUTO_CREATE);
-        isOutpointServiceBound = true;
-    }
-
-    void doUnbindService() {
-        if (isOutpointServiceBound) {
-            // Detach our existing connection.
-            unbindService(outpointServiceConnection);
-            isOutpointServiceBound = false;
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        doUnbindService();
-    }
+//    private OutpointService outpointService;
+//
+//    private ServiceConnection outpointServiceConnection = new ServiceConnection() {
+//        public void onServiceConnected(ComponentName className, IBinder service) {
+//            // This is called when the connection with the service has been
+//            // established, giving us the service object we can use to
+//            // interact with the service.  Because we have bound to a explicit
+//            // service that we know is running in our own process, we can
+//            // cast its IBinder to a concrete class and directly access it.
+//            outpointService = ((OutpointService.OutpointBinder)service).getService();
+//
+//            // Tell the user about this for our demo.
+//            Toast.makeText(Bitcoin.this, R.string.outpoint_service_connected, Toast.LENGTH_SHORT).show();
+//        }
+//
+//        public void onServiceDisconnected(ComponentName className) {
+//            // This is called when the connection with the service has been
+//            // unexpectedly disconnected -- that is, its process crashed.
+//            // Because it is running in our same process, we should never
+//            // see this happen.
+//            outpointService = null;
+//            Toast.makeText(Bitcoin.this, R.string.outpoint_service_disconnected, Toast.LENGTH_SHORT).show();
+//        }
+//    };
+//    private boolean isOutpointServiceBound;
+//
+//    void doBindService() {
+//        // Establish a connection with the service.  We use an explicit
+//        // class name because we want a specific service implementation that
+//        // we know will be running in our own process (and thus won't be
+//        // supporting component replacement by other applications).
+//        bindService(new Intent(Bitcoin.this, OutpointService.class), outpointServiceConnection, Context.BIND_AUTO_CREATE);
+//        isOutpointServiceBound = true;
+//    }
+//
+//    void doUnbindService() {
+//        if (isOutpointServiceBound) {
+//            // Detach our existing connection.
+//            unbindService(outpointServiceConnection);
+//            isOutpointServiceBound = false;
+//        }
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        doUnbindService();
+//    }
 }

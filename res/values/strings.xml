@@ -5,9 +5,9 @@
     <string name="receiveAmountLabel">Receive Amount</string>
     <string name="recieveLabelLabel">Name</string>
     <string name="receiveMessageLabel">Message</string>
-    <string name="outpoint_service_started">Started</string>
-    <string name="outpoint_service_stopped">Stopped</string>
-    <string name="outpoint_service_label">Outpoint Service</string>
+    <string name="outpoint_service_started">Refreshing BTC Balance...</string>
+    <string name="outpoint_service_stopped">BTC Balance Refresh Complete</string>
+    <string name="outpoint_service_label">Bitcoin</string>
     <string name="outpoint_service_connected">Connected!</string>
     <string name="outpoint_service_disconnected">Disconnected!</string>
     <string-array name="btcAddresses">
