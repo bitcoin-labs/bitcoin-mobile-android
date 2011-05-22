@@ -33,7 +33,7 @@ public class Bitcoin extends Activity
         balanceStatusView = (TextView)findViewById(R.id.balance_status);
         balanceView = (TextView)findViewById(R.id.balance);
         balanceUnconfirmedView = (TextView)findViewById(R.id.balance_unconfirmed);
-
+        
         final View refreshButton = findViewById(R.id.refreshButton);
         refreshButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -50,6 +50,9 @@ public class Bitcoin extends Activity
                 callScan();
             }
         });
+        WalletOpenHelper wallet = new WalletOpenHelper(getApplicationContext());
+        long balance = wallet.getBalance();
+        balanceView.setText(MoneyUtils.formatSatoshisAsBtcString(balance));
     }
 
     @Override
