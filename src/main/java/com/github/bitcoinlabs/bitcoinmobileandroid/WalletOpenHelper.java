@@ -156,7 +156,9 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         cursor.moveToFirst();
         while (cursor.isAfterLast() == false) {
             satoshis += cursor.getLong(0);
+            cursor.moveToNext();
         }
+        db.close();
         return satoshis;
     }
 
@@ -251,6 +253,8 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
                     "UPDATE outpoints SET spent = 1 WHERE ((" + HASH + " = ?) AND (" + N + " = ?));",
                     new Object[]{in_hashes.get(i), in_indexes.get(i)});
         }
+        
+        db.close();
         
         return tx;
     }
