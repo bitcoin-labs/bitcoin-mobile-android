@@ -154,7 +154,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         return satoshis;
     }
 
-    public Transaction createTransaction(long targetSatoshis, String destAddress) {
+    public Transaction createTransaction(long targetSatoshis, String destAddress, long feeSatoshis) {
         
         long satoshisGathered = 0;
         
@@ -170,14 +170,14 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         // Read outpoints
         Cursor cursor = db.query("outpoints", new String[]{"id", HASH, ADDRESS, N, SATOSHIS}, "spent = 0", null, null, null, null, null);
         cursor.moveToFirst();
-        while ((satoshisGathered < targetSatoshis) && (cursor.isAfterLast() == false)) {
+        while ((satoshisGathered < (targetSatoshis + feeSatoshis)) && (cursor.isAfterLast() == false)) {
             in_ids.add(cursor.getInt(0));
             in_hashes.add(cursor.getBlob(1));
             in_addresses.add(cursor.getString(2));
             in_indexes.add(cursor.getInt(3));
             satoshisGathered += cursor.getLong(4);
         }
-        if (satoshisGathered < targetSatoshis) {
+        if (satoshisGathered < (targetSatoshis + feeSatoshis)) {
             return null;
         }
         
@@ -192,7 +192,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         whereClause += "))";
         cursor = db.query("keys", new String[]{ADDRESS, KEY}, whereClause, null, null, null, null, null);
         cursor.moveToFirst();
-        while ((satoshisGathered < targetSatoshis) && (cursor.isAfterLast() == false)) {
+        while (cursor.isAfterLast() == false) {
             address_key_map.put(
                 cursor.getString(0),
                 new ECKey(new BigInteger(cursor.getBlob(1))));
@@ -209,8 +209,8 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         }
         try {
             tse.addOutput(new BigInteger("" + targetSatoshis), destAddress);
-            if (satoshisGathered < targetSatoshis) {
-                BigInteger changeSatoshis = new BigInteger("" + (satoshisGathered - targetSatoshis));
+            if (satoshisGathered < (targetSatoshis + feeSatoshis)) {
+                BigInteger changeSatoshis = new BigInteger("" + (satoshisGathered - (targetSatoshis + feeSatoshis)));
                 tse.addOutput(changeSatoshis, getUnusedAddress().toString());
             }
         }
