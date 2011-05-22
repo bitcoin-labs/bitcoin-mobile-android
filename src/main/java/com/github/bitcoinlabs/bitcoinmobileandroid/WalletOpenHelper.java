@@ -172,7 +172,6 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         ArrayList<String> in_addresses = new ArrayList<String>();
         ArrayList<byte[]> in_hashes = new ArrayList<byte[]>();
         ArrayList<Integer> in_indexes = new ArrayList<Integer>();
-        ArrayList<Integer> in_ids = new ArrayList<Integer>();
         
         HashMap<String, ECKey> address_key_map = new HashMap<String, ECKey>();
         
