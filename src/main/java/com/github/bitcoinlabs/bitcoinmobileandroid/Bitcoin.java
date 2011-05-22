@@ -50,6 +50,7 @@ public class Bitcoin extends Activity
                 callScan();
             }
         });
+        balanceStatusView.setText("WARNING: This is an experimental(alpha) release. You may lose all of your bitcoin using this app. Please do not store non trivial amounts of bitcoin in this app.");
     }
 
     @Override
