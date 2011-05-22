@@ -53,30 +53,25 @@
     <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/refreshButton"
-            android:text="Refresh"
+            android:id="@+id/scanButton"
+            android:text="Scan"
             android:textSize="30sp"
-            android:layout_margin="10dp"/>
-    <LinearLayout
+            android:layout_margin="10dp"
+            android:layout_weight="1"/>
+    <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/scanButton"
-                android:text="Scan"
-                android:textSize="30sp"
-                android:layout_margin="10dp"
-                android:layout_weight="1"/>
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/recButton"
-                android:text="Receive"
-                android:textSize="30sp"
-                android:layout_margin="10dp"
-                android:layout_weight="1"/>
-    </LinearLayout>
+            android:id="@+id/recButton"
+            android:text="Receive"
+            android:textSize="30sp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"/>
+    <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/refreshButton"
+            android:text="Check Balance"
+            android:textSize="30sp"
+            android:layout_margin="10dp"/>
 </LinearLayout>
 
