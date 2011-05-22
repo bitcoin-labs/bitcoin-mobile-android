@@ -92,6 +92,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
             return null;
         }
         else {
+            cursor.moveToFirst();
             return new ECKey(new BigInteger(cursor.getBlob(0)));
         }
     }
