@@ -20,7 +20,7 @@ dependencies {
 }
 // Sets the package version
 version = "0.0.4-SNAPSHOT"
-devLabel = "Dev"
+devLabelSuffix = "Dev"
 // Signing configuration, valid for all builds (1)
 //androidPackage {
 //	keyStore = "path/to/my/keystore"
@@ -51,5 +51,5 @@ task configureProguard << {
 task configureRelease << {
     //proguard cannot currently be properly configured
     //proguard.enabled = true
-    devLabel = ""
+    devLabelSuffix = ""
 }
