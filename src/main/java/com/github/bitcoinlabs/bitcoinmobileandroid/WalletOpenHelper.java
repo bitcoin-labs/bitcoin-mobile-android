@@ -232,7 +232,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
             Log.i(getClass().getSimpleName()+"", destAddress);
             
             tse.addOutput(new BigInteger("" + targetSatoshis), destAddress);
-            if (satoshisGathered < (targetSatoshis + feeSatoshis)) {
+            if (satoshisGathered > (targetSatoshis + feeSatoshis)) {
                 String changeAddress = getUnusedAddress().toString();
                 
                 Log.i(getClass().getSimpleName()+"", "****** Output");
