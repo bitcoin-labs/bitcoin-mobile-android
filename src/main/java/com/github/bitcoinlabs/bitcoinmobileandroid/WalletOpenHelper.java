@@ -1,6 +1,7 @@
 package com.github.bitcoinlabs.bitcoinmobileandroid;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.math.BigInteger;
 
@@ -10,6 +11,7 @@ import com.google.bitcoin.core.ECKey;
 import com.google.bitcoin.core.NetworkParameters;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,13 +27,14 @@ import com.google.bitcoin.core.NetworkParameters;
 public class WalletOpenHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "keys";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     public static final String KEY = "key";
     public static final String ADDRESS = "address58";
     private static final String HASH = "hash";
     private static final String N = "n";
     private static final String SATOSHIS = "satoshis";
+    private static final String SPENT = "spent";
 
     WalletOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -45,7 +48,8 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade (SQLiteDatabase db, int oldVersion, int newVersion){
-        if (oldVersion <= 1) {
+        if (oldVersion <= 2) {
+            db.execSQL("DROP TABLE outpoints;");
             createTableOutpoints(db);
         }
     }
@@ -61,12 +65,12 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
     private void createTableOutpoints(SQLiteDatabase db) {
         db.execSQL(
                 "CREATE TABLE outpoints (" +
-                "id         INTEGER PRIMARY KEY AUTOINCREMENT," +
                 HASH + " BLOB," +
                 ADDRESS + " TEXT," +
                 N + " INTEGER," + 
-                SATOSHIS + " INTEGER" +
-                "spent INTEGER DEFAULT 0);");
+                SATOSHIS + " INTEGER," +
+                SPENT + " INTEGER DEFAULT 0," +
+                "PRIMARY KEY (" + HASH + "," + N + "));");
     }
 
     public Address newKey() {
@@ -120,6 +124,23 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
             btcAddress = newKey();
         }
         return btcAddress;
+    }
+
+    public void add(OutpointsResponse outpointsResponse) {
+        SQLiteDatabase db = getWritableDatabase();
+        Collection<Outpoint> outpoints = outpointsResponse.getUnspent_outpoints();
+        for (Outpoint outpoint : outpoints) {
+            outpoint.getAddress();
+            try {
+            db.execSQL(
+                    "INSERT INTO outpoints ('"+HASH+"', '"+ADDRESS+"', '"+N+"', '"+SATOSHIS+"') VALUES (?, ?, ?, ?)",
+                    new Object[] { outpoint.getHash(), outpoint.getAddress(), outpoint.getIndex(), outpoint.getSatoshis()} );
+            } catch (SQLiteConstraintException e) {
+                //do nothing as we will assume we already have a record of this outpoint.
+                //TODO verify that we have the right ADDRESS and SATOSHIS for this outpoint
+            }
+        }
+        db.close();
     }
     
     public long getBalance() {

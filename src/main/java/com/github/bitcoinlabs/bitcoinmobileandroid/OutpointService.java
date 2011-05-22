@@ -136,6 +136,7 @@ public class OutpointService extends IntentService {
             InputStream content = responseEntity.getContent();
             Reader reader = new InputStreamReader(content);
             outpointsResponse = gson.fromJson(reader, OutpointsResponse.class);
+            wallet.add(outpointsResponse);
             Log.i(getClass().getSimpleName()+"", outpointsResponse+"");
         } catch (Exception e) {
             Log.w(getClass().getSimpleName()+"", e);
