@@ -102,6 +102,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         if (cursor.getCount() > 0) {
             cursor.moveToNext();
             String addressString = cursor.getString(0);
+            cursor.close();
             try {
                 btcAddress = new Address(NetworkParameters.prodNet(), addressString);
             } catch (AddressFormatException e) {

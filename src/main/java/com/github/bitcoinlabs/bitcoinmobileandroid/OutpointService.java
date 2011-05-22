@@ -3,9 +3,6 @@ package com.github.bitcoinlabs.bitcoinmobileandroid;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,26 +13,31 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+import com.google.bitcoin.core.Address;
 import com.google.gson.Gson;
 
+import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-public class OutpointService extends Service {
+public class OutpointService extends IntentService {
+
     private NotificationManager mNM;
 
     // Unique Identification Number for the Notification.
     // We use it on Notification start, and to cancel it.
     private int NOTIFICATION = R.string.outpoint_service_started;
+
+    public OutpointService() {
+        super("OutpointService");
+    }
 
     /**
      * Class for clients to access.  Because we know this service always
@@ -48,64 +50,97 @@ public class OutpointService extends Service {
         }
     }
 
+//    @Override
+//    public void onCreate() {
+//        mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+//
+//        // Display a notification about us starting.  We put an icon in the status bar.
+//        showNotification();
+//    }
+//
+//    @Override
+//    public int onStartCommand(Intent intent, int flags, int startId) {
+//        Log.i("LocalService", "Received start id " + startId + ": " + intent);
+//        RetrieveOutpointsTask retrieveOutpointsTask = new RetrieveOutpointsTask();
+//        retrieveOutpointsTask.doInBackground(getApplicationContext());
+//        // We want this service to continue running until it is explicitly
+//        // stopped, so return sticky.
+//        return START_STICKY;
+//    }
+
+//    @Override
+//    public void onDestroy() {
+//        // Cancel the persistent notification.
+//        mNM.cancel(NOTIFICATION);
+//
+//        // Tell the user we stopped.
+//        Toast.makeText(this, R.string.outpoint_service_stopped, Toast.LENGTH_SHORT).show();
+//    }
+
+//    @Override
+//    public IBinder onBind(Intent intent) {
+//        return mBinder;
+//    }
+
+//    // This is the object that receives interactions from clients.  See
+//    // RemoteService for a more complete example.
+//    private final IBinder mBinder = new OutpointBinder();
+//
+//    /**
+//     * Show a notification while this service is running.
+//     */
+//    private void showNotification() {
+//        // In this sample, we'll use the same text for the ticker and the expanded notification
+//        CharSequence text = getText(R.string.outpoint_service_started);
+//
+//        // Set the icon, scrolling text and timestamp
+//        Notification notification = new Notification(R.drawable.icon, text,
+//                System.currentTimeMillis());
+//
+//        // The PendingIntent to launch our activity if the user selects this notification
+//        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+//                new Intent(this, Bitcoin.class), 0);
+//
+//        // Set the info for the views that show in the notification panel.
+//        notification.setLatestEventInfo(this, getText(R.string.outpoint_service_label),
+//                       text, contentIntent);
+//
+//        // Send the notification.
+//        mNM.notify(NOTIFICATION, notification);
+//    }
+
+    private static final String BITCOIN_EXIT_NODE_URL = "http://97.107.139.194:8000/api/unspent-outpoints.js";
+
     @Override
-    public void onCreate() {
-        mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+    protected void onHandleIntent(Intent outpointQueryIntent) {
+        Log.i(getClass().getSimpleName()+"", "handle:" + outpointQueryIntent);
+        int TIMEOUT_MILLISEC = 10000;  // = 10 seconds
+        HttpParams httpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParams, TIMEOUT_MILLISEC);
+        HttpConnectionParams.setSoTimeout(httpParams, TIMEOUT_MILLISEC);
+        HttpClient client = new DefaultHttpClient(httpParams);
 
-        // Display a notification about us starting.  We put an icon in the status bar.
-        showNotification();
+        HttpGet request;
+        Gson gson = new Gson();
+
+        Context context = getApplicationContext();
+        WalletOpenHelper wallet = new WalletOpenHelper(context);
+        Address address = wallet.getUnusedAddress();
+        String btcAddress = address.toString();
+        HttpResponse response = null;
+        OutpointsResponse outpointsResponse = null;
+        try {
+            request = new HttpGet(BITCOIN_EXIT_NODE_URL + "?addresses=" + btcAddress);
+            response = client.execute(request);
+            HttpEntity responseEntity = response.getEntity();
+            InputStream content = responseEntity.getContent();
+            Reader reader = new InputStreamReader(content);
+            outpointsResponse = gson.fromJson(reader, OutpointsResponse.class);
+            Log.i(getClass().getSimpleName()+"", outpointsResponse+"");
+        } catch (Exception e) {
+            Log.w(getClass().getSimpleName()+"", e);
+            outpointsResponse = new OutpointsResponse(e, null);
+        }
+//        context.startActivity(new Intent(context, Bitcoin.class));
     }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i("LocalService", "Received start id " + startId + ": " + intent);
-        RetrieveOutpointsTask retrieveOutpointsTask = new RetrieveOutpointsTask();
-        WalletOpenHelper wallet = new WalletOpenHelper(getApplicationContext());
-        retrieveOutpointsTask.doInBackground(wallet);
-        // We want this service to continue running until it is explicitly
-        // stopped, so return sticky.
-        return START_STICKY;
-    }
-
-    @Override
-    public void onDestroy() {
-        // Cancel the persistent notification.
-        mNM.cancel(NOTIFICATION);
-
-        // Tell the user we stopped.
-        Toast.makeText(this, R.string.outpoint_service_stopped, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
-
-    // This is the object that receives interactions from clients.  See
-    // RemoteService for a more complete example.
-    private final IBinder mBinder = new OutpointBinder();
-
-    /**
-     * Show a notification while this service is running.
-     */
-    private void showNotification() {
-        // In this sample, we'll use the same text for the ticker and the expanded notification
-        CharSequence text = getText(R.string.outpoint_service_started);
-
-        // Set the icon, scrolling text and timestamp
-        Notification notification = new Notification(R.drawable.icon, text,
-                System.currentTimeMillis());
-
-        // The PendingIntent to launch our activity if the user selects this notification
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, Bitcoin.class), 0);
-
-        // Set the info for the views that show in the notification panel.
-        notification.setLatestEventInfo(this, getText(R.string.outpoint_service_label),
-                       text, contentIntent);
-
-        // Send the notification.
-        mNM.notify(NOTIFICATION, notification);
-    }
-
 }

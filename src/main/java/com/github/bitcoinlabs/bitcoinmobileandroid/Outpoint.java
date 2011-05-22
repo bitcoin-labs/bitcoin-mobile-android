@@ -45,4 +45,10 @@ public class Outpoint {
     public void setSatoshis(long satoshis) {
         this.satoshis = satoshis;
     }
+
+    @Override
+    public String toString() {
+        return "Outpoint [address=" + address + ", hash=" + hash + ", n=" + n
+                + ", satoshis=" + satoshis + "]";
+    }
 }

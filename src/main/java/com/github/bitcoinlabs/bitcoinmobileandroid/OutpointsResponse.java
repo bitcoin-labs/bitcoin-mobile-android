@@ -47,4 +47,12 @@ public class OutpointsResponse {
     public Collection<Outpoint> getUnspent_outpoints() {
         return unspent_outpoints;
     }
+
+    @Override
+    public String toString() {
+        return "OutpointsResponse [timeStamp=" + timeStamp + ", exception="
+                + exception + ", serverError=" + serverError
+                + ", unspent_outpoints=" + unspent_outpoints + "]";
+    }
+    
 }

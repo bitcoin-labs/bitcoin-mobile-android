@@ -1,40 +1,19 @@
 package com.github.bitcoinlabs.bitcoinmobileandroid;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
+import android.content.ServiceConnection;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
 
 public class Bitcoin extends Activity
 {
@@ -55,17 +34,20 @@ public class Bitcoin extends Activity
         balanceView = (TextView)findViewById(R.id.balance);
         balanceUnconfirmedView = (TextView)findViewById(R.id.balance_unconfirmed);
 
-        findViewById(R.id.recButton).setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View view)
-            {
+        final View refreshButton = findViewById(R.id.refreshButton);
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+//                refreshButton.setEnabled(false);
+                startService(new Intent(getApplicationContext(), OutpointService.class));
+            }
+        });
+        findViewById(R.id.recButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
                 Receive.callMe(Bitcoin.this);
             }
         });
-        findViewById(R.id.scanButton).setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View view)
-            {
+        findViewById(R.id.scanButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
                 callScan();
             }
         });
@@ -91,7 +73,7 @@ public class Bitcoin extends Activity
 
     private void refreshBalance() {
         balanceStatusView.setText("Refreshing...");
-        new RefreshOutpointsTask().execute();
+        getApplicationContext().startService(new Intent());
     }
 
     private void callScan()
@@ -126,70 +108,52 @@ public class Bitcoin extends Activity
             }
         }
     }
+    private OutpointService outpointService;
 
-    private class RefreshOutpointsTask extends AsyncTask<Void, Void, OutpointsResponse> {
+    private ServiceConnection outpointServiceConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            // This is called when the connection with the service has been
+            // established, giving us the service object we can use to
+            // interact with the service.  Because we have bound to a explicit
+            // service that we know is running in our own process, we can
+            // cast its IBinder to a concrete class and directly access it.
+            outpointService = ((OutpointService.OutpointBinder)service).getService();
 
-        @Override
-        protected OutpointsResponse doInBackground(Void... params) {
-
-            int TIMEOUT_MILLISEC = 10000;  // = 10 seconds
-            HttpParams httpParams = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpParams, TIMEOUT_MILLISEC);
-            HttpConnectionParams.setSoTimeout(httpParams, TIMEOUT_MILLISEC);
-            HttpClient client = new DefaultHttpClient(httpParams);
-
-//            HttpPost request = new HttpPost(BITCOIN_EXIT_NODE_BALANCE);
-            HttpGet request;
-            Gson gson = new Gson();
-
-            WalletOpenHelper wallet = new WalletOpenHelper(getApplicationContext());
-            Cursor addressesCursor = wallet.getAddresses();
-            //TODO figure out how to stream the cursor into a json array
-            String[] btcAddresses = new String[addressesCursor.getCount()];
-            int i = 0;
-            while (addressesCursor.isAfterLast() == false) {
-                btcAddresses[i] = addressesCursor.getString(0);
-                i++;
-                addressesCursor.moveToNext();
-            }
-//            String postMessage = gson.toJson(btcAddresses);
-            HttpResponse response = null;
-            OutpointsResponse outpointsResponse = null;
-            try {
-                request = new HttpGet(BITCOIN_EXIT_NODE_BALANCE + "?addresses=" + commaSeparate(btcAddresses));
-
-                response = client.execute(request);
-                HttpEntity responseEntity = response.getEntity();
-                InputStream content = responseEntity.getContent();
-                Reader reader = new InputStreamReader(content);
-                outpointsResponse = gson.fromJson(reader, OutpointsResponse.class);
-            } catch (Exception e) {
-                outpointsResponse = new OutpointsResponse(e, null);
-            }
-            return outpointsResponse;
+            // Tell the user about this for our demo.
+            Toast.makeText(Bitcoin.this, R.string.outpoint_service_connected, Toast.LENGTH_SHORT).show();
         }
 
-        private String commaSeparate(String[] strings) {
-            if (strings == null || strings.length < 1) {
-                throw new IllegalArgumentException("strings array must have at least one string");
-            }
-            return Arrays.toString(strings).replaceAll("[\\[\\] ]", "");
+        public void onServiceDisconnected(ComponentName className) {
+            // This is called when the connection with the service has been
+            // unexpectedly disconnected -- that is, its process crashed.
+            // Because it is running in our same process, we should never
+            // see this happen.
+            outpointService = null;
+            Toast.makeText(Bitcoin.this, R.string.outpoint_service_disconnected, Toast.LENGTH_SHORT).show();
         }
+    };
+    private boolean isOutpointServiceBound;
 
-        @Override
-        protected void onPostExecute(OutpointsResponse outpointsResponse) {
-            if (outpointsResponse.isError()) {
-                balanceStatusView.setText(outpointsResponse.getException() + ": " + outpointsResponse.getServerError());
-            } else {
-                balanceStatusView.setText("Last checked: " + new Date(outpointsResponse.getTimeStamp()));
-                Collection<Outpoint> unspent_outpoints = outpointsResponse.getUnspent_outpoints();
-                long satoshis = 0;
-                for (Outpoint outpoint : unspent_outpoints) {
-                    satoshis += outpoint.getSatoshis();
-                }
-                balanceView.setText(MoneyUtils.formatSatoshisAsBtcString(satoshis));
-                balanceUnconfirmedView.setText(MoneyUtils.formatSatoshisAsBtcString(0));
-            }
+    void doBindService() {
+        // Establish a connection with the service.  We use an explicit
+        // class name because we want a specific service implementation that
+        // we know will be running in our own process (and thus won't be
+        // supporting component replacement by other applications).
+        bindService(new Intent(Bitcoin.this, OutpointService.class), outpointServiceConnection, Context.BIND_AUTO_CREATE);
+        isOutpointServiceBound = true;
+    }
+
+    void doUnbindService() {
+        if (isOutpointServiceBound) {
+            // Detach our existing connection.
+            unbindService(outpointServiceConnection);
+            isOutpointServiceBound = false;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        doUnbindService();
     }
 }
