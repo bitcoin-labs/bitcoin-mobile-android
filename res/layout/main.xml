@@ -23,7 +23,7 @@
                 android:textSize="20sp"
                 android:text="0.00BTC"/>
     </LinearLayout>
-    <LinearLayout
+    <!-- LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -40,7 +40,7 @@
                 android:id="@+id/balance_unconfirmed"
                 android:textSize="20sp"
                 android:text="0.00BTC"/>
-    </LinearLayout>
+    </LinearLayout-->
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,13 +51,12 @@
             android:layout_weight="1"
             android:id="@+id/transactionsList"/>
     <Button
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/refreshButton"
             android:text="Refresh"
             android:textSize="30sp"
-            android:layout_margin="10dp"
-            android:layout_weight="1"/>
+            android:layout_margin="10dp"/>
     <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

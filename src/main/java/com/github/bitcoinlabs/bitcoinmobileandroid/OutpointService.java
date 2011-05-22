@@ -78,8 +78,12 @@ public class OutpointService extends IntentService {
         // Cancel the persistent notification.
         mNM.cancel(NOTIFICATION);
 
+        WalletOpenHelper wallet = new WalletOpenHelper(getApplicationContext());
+        long balance = wallet.getBalance();
         // Tell the user we stopped.
-        Toast.makeText(this, R.string.outpoint_service_stopped, Toast.LENGTH_SHORT).show();
+        CharSequence text = getText(R.string.outpoint_service_stopped);
+
+        Toast.makeText(this, text + "\nNew Balance: " + MoneyUtils.formatSatoshisAsBtcString(balance) + "BTC", Toast.LENGTH_LONG).show();
     }
 
 //    @Override
