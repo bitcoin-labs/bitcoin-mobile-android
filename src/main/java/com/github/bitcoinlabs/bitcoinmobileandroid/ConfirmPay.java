@@ -10,6 +10,29 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.math.BigInteger;
+import java.io.IOException;
+
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.BasicHttpParams;
+
+import com.google.bitcoin.core.TransactionStandaloneEncoder;
+import com.google.bitcoin.core.NetworkParameters;
+import com.google.bitcoin.core.Transaction;
+import com.google.bitcoin.core.ECKey;
+import com.google.bitcoin.bouncycastle.util.encoders.Base64;
+import com.google.bitcoin.core.AddressFormatException;
+
 /**
  * Created by IntelliJ IDEA.
  * User: kevin
@@ -20,6 +43,7 @@ import android.widget.Toast;
 public class ConfirmPay extends Activity
 {
     public static final String CONFIRM_PAY_URI = "CONFIRM_PAY_URI";
+    int TIMEOUT_MS = 10000;
 
     public void onCreate(Bundle savedInstanceState)
     {
@@ -30,7 +54,8 @@ public class ConfirmPay extends Activity
         double val = 0;
         Uri bitcoinUri = getIntent().getData();
         assert("bitcoin".equals(bitcoinUri.getScheme()));
-        //hackity hackity
+        
+        // Hacky. Parses "bitcoin:...address..."
         bitcoinUri = Uri.parse("bitcoin://" + bitcoinUri.getEncodedSchemeSpecificPart());
 
         final String bitcoinAddress = bitcoinUri.getAuthority();
@@ -46,18 +71,50 @@ public class ConfirmPay extends Activity
         payLabel.setText(label);
         payMessage.setText(message);
         
+        // TODO: lossless parsing
         double amountD = 0.0;
         try {
             amountD = Double.parseDouble(amount);
         } catch (Exception e) {
         }
+        final long amountSatoshis = (long)(amountD * 1e8);
+        
         payAmount.setText(MoneyUtils.formatMoney(amountD));
         payAmount.setSelectAllOnFocus(true);
         findViewById(R.id.confirmButton).setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View view)
             {
-                Toast.makeText(ConfirmPay.this, payAmount.getText() + "BTC paid to " + payLabel.getText() + " (" + bitcoinAddress + ")" , Toast.LENGTH_LONG).show();
+                WalletOpenHelper helper = new WalletOpenHelper(getApplicationContext());
+                Transaction tx = helper.createTransaction(amountSatoshis, bitcoinAddress);
+                
+                if (tx == null) {
+                    Toast.makeText(ConfirmPay.this, "Insufficient balance." , Toast.LENGTH_LONG).show();
+                }
+                else {
+                    byte[] msg = tx.bitcoinSerialize();
+                    String msg64 = new String(new Base64().encode(msg));
+                    
+                    HttpParams httpParams = new BasicHttpParams();
+                    HttpConnectionParams.setConnectionTimeout(httpParams, TIMEOUT_MS);
+                    HttpConnectionParams.setSoTimeout(httpParams, TIMEOUT_MS);
+                    HttpClient client = new DefaultHttpClient(httpParams);
+                    HttpClient httpclient = new DefaultHttpClient();
+                    HttpPost httppost = new HttpPost("http://97.107.139.194:8000/api/publish-tx.js");
+                    try {
+                        ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+                        nameValuePairs.add(new BasicNameValuePair("tx64", msg64));
+                        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                        HttpResponse response = httpclient.execute(httppost);
+                        Toast.makeText(ConfirmPay.this, payAmount.getText() + "BTC paid to " + payLabel.getText() + " (" + bitcoinAddress + ")" , Toast.LENGTH_LONG).show();
+                    }
+                    catch (ClientProtocolException e) {
+                        Toast.makeText(ConfirmPay.this, "HTTP: ClientProtocolException", Toast.LENGTH_LONG).show();
+                    }
+                    catch (IOException e) {
+                        Toast.makeText(ConfirmPay.this, "HTTP: IOException", Toast.LENGTH_LONG).show();
+                    }
+                }
                 finish();
             }
         });
