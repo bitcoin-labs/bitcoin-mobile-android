@@ -1,4 +1,3 @@
-
 buildscript {
   repositories {
     mavenCentral()
@@ -20,7 +19,8 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.6.1'
 }
 // Sets the package version
-version = "0.0.3-SNAPSHOT"
+version = "0.0.4-SNAPSHOT"
+devLabel = "Dev"
 // Signing configuration, valid for all builds (1)
 //androidPackage {
 //	keyStore = "path/to/my/keystore"
@@ -43,7 +43,13 @@ processResources {
 task configureDebug << {
     jar.classifier = "debug"
 }
-// Configure a dedicated release build (4)
-task configureRelease << {
+// Enable proguard
+task configureProguard << {
     proguard.enabled = true
+}
+// Configure build for release to market
+task configureRelease << {
+    //proguard cannot currently be properly configured
+    //proguard.enabled = true
+    devLabel = ""
 }
