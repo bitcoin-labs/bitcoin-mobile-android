@@ -171,7 +171,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         whereClause += "))";
         cursor = db.query("keys", new String[]{ADDRESS, KEY}, whereClause, null, null, null, null, null);
         cursor.moveToFirst();
-        while ((satoshisGathered < targetSatoshis) && (cursor.isAfterLast() == false)) {
+        while (cursor.isAfterLast() == false) {
             address_key_map.put(
                 cursor.getString(0),
                 new ECKey(new BigInteger(cursor.getBlob(1))));
