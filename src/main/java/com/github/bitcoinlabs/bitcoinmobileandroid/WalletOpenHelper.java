@@ -65,7 +65,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
                 HASH + " BLOB," +
                 ADDRESS + " TEXT," +
                 N + " INTEGER," + 
-                SATOSHIS + " INTEGER" +
+                SATOSHIS + " INTEGER," +
                 "spent INTEGER DEFAULT 0);");
     }
 
