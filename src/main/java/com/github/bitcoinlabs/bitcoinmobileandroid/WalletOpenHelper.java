@@ -9,7 +9,9 @@ import com.google.bitcoin.core.Address;
 import com.google.bitcoin.core.AddressFormatException;
 import com.google.bitcoin.core.ECKey;
 import com.google.bitcoin.core.NetworkParameters;
+import com.google.bitcoin.core.Utils;
 
+import android.util.Log;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -134,7 +136,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
             outpoint.getAddress();
             try {
                 ContentValues values = new ContentValues();
-                values.put(HASH, Util.hexStringToByteArray(outpoint.getHash()));
+                values.put(HASH, Utils.hexStringToBytes(outpoint.getHash()));
                 values.put(ADDRESS, outpoint.getAddress());
                 values.put(N, outpoint.getIndex());
                 values.put(SATOSHIS, outpoint.getSatoshis());
@@ -179,6 +181,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
             in_addresses.add(cursor.getString(1));
             in_indexes.add(cursor.getInt(2));
             satoshisGathered += cursor.getLong(3);
+            cursor.moveToNext();
         }
         if (satoshisGathered < (targetSatoshis + feeSatoshis)) {
             return null;
@@ -199,22 +202,41 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
             address_key_map.put(
                 cursor.getString(0),
                 new ECKey(new BigInteger(cursor.getBlob(1))));
+            cursor.moveToNext();
         }
         
         // Create transaction
         Transaction tx;
         TransactionStandaloneEncoder tse = new TransactionStandaloneEncoder(NetworkParameters.prodNet());
         for (int i = 0; i < in_addresses.size(); i++) {
-            tse.addInput(
-                    address_key_map.get(in_addresses.get(i)),
-                    in_indexes.get(i).intValue(),
-                    in_hashes.get(i));
+            
+            ECKey key = address_key_map.get(in_addresses.get(i));
+            int index = in_indexes.get(i).intValue();
+            byte[] hash = in_hashes.get(i);
+            
+            Log.i(getClass().getSimpleName()+"", "****** Input");
+            Log.i(getClass().getSimpleName()+"key address:", key.toAddress(NetworkParameters.prodNet()).toString());
+            Log.i(getClass().getSimpleName()+"", "" + index);
+            Log.i(getClass().getSimpleName()+"", Utils.bytesToHexString(hash));
+            
+            tse.addInput(key, index, hash);
         }
         try {
+            
+            Log.i(getClass().getSimpleName()+"", "****** Output");
+            Log.i(getClass().getSimpleName()+"", "" + targetSatoshis);
+            Log.i(getClass().getSimpleName()+"", destAddress);
+            
             tse.addOutput(new BigInteger("" + targetSatoshis), destAddress);
             if (satoshisGathered < (targetSatoshis + feeSatoshis)) {
+                String changeAddress = getUnusedAddress().toString();
+                
+                Log.i(getClass().getSimpleName()+"", "****** Output");
+                Log.i(getClass().getSimpleName()+"", "" + (satoshisGathered - (targetSatoshis + feeSatoshis)));
+                Log.i(getClass().getSimpleName()+"", changeAddress);
+                
                 BigInteger changeSatoshis = new BigInteger("" + (satoshisGathered - (targetSatoshis + feeSatoshis)));
-                tse.addOutput(changeSatoshis, getUnusedAddress().toString());
+                tse.addOutput(changeSatoshis, changeAddress);
             }
         }
         catch (AddressFormatException e) {
@@ -226,7 +248,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         // Spend outpoints
         for (int i = 0; i < in_hashes.size(); i++) {
             db.execSQL(
-                    "UPDATE outpoints SET spent = 1 WHERE ((" + HASH + " = ?) AND (" + N + " = ?))",
+                    "UPDATE outpoints SET spent = 1 WHERE ((" + HASH + " = ?) AND (" + N + " = ?));",
                     new Object[]{in_hashes.get(i), in_indexes.get(i)});
         }
         
