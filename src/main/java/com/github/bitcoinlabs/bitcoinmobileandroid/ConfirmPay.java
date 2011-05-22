@@ -44,6 +44,7 @@ public class ConfirmPay extends Activity
 {
     public static final String CONFIRM_PAY_URI = "CONFIRM_PAY_URI";
     int TIMEOUT_MS = 10000;
+    long FEE_SATOSHIS = 1000000;
 
     public void onCreate(Bundle savedInstanceState)
     {
@@ -86,7 +87,7 @@ public class ConfirmPay extends Activity
             public void onClick(View view)
             {
                 WalletOpenHelper helper = new WalletOpenHelper(getApplicationContext());
-                Transaction tx = helper.createTransaction(amountSatoshis, bitcoinAddress);
+                Transaction tx = helper.createTransaction(amountSatoshis, bitcoinAddress, FEE_SATOSHIS);
                 
                 if (tx == null) {
                     Toast.makeText(ConfirmPay.this, "Insufficient balance." , Toast.LENGTH_LONG).show();
