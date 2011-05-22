@@ -161,7 +161,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
             satoshis += cursor.getLong(0);
             cursor.moveToNext();
         }
-        db.close();
+        cursor.close();
         return satoshis;
     }
 
@@ -187,6 +187,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
             satoshisGathered += cursor.getLong(3);
             cursor.moveToNext();
         }
+        cursor.close();
         if (satoshisGathered < (targetSatoshis + feeSatoshis)) {
             return null;
         }
@@ -208,6 +209,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
                 new ECKey(new BigInteger(cursor.getBlob(1))));
             cursor.moveToNext();
         }
+        cursor.close();
         
         // Create transaction
         Transaction tx;
@@ -255,8 +257,6 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
                     "UPDATE outpoints SET spent = 1 WHERE ((" + HASH + " = ?) AND (" + N + " = ?));",
                     new Object[]{in_hashes.get(i), in_indexes.get(i)});
         }
-        
-        db.close();
         
         return tx;
     }
