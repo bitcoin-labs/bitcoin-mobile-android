@@ -172,14 +172,13 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         
         // Read outpoints
-        Cursor cursor = db.query("outpoints", new String[]{"id", HASH, ADDRESS, N, SATOSHIS}, "spent = 0", null, null, null, null, null);
+        Cursor cursor = db.query("outpoints", new String[]{HASH, ADDRESS, N, SATOSHIS}, "spent = 0", null, null, null, null, null);
         cursor.moveToFirst();
         while ((satoshisGathered < (targetSatoshis + feeSatoshis)) && (cursor.isAfterLast() == false)) {
-            in_ids.add(cursor.getInt(0));
-            in_hashes.add(cursor.getBlob(1));
-            in_addresses.add(cursor.getString(2));
-            in_indexes.add(cursor.getInt(3));
-            satoshisGathered += cursor.getLong(4);
+            in_hashes.add(cursor.getBlob(0));
+            in_addresses.add(cursor.getString(1));
+            in_indexes.add(cursor.getInt(2));
+            satoshisGathered += cursor.getLong(3);
         }
         if (satoshisGathered < (targetSatoshis + feeSatoshis)) {
             return null;
@@ -225,15 +224,11 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         tx = tse.createSignedTransaction();
         
         // Spend outpoints
-        whereClause = "(id in (";
-        for (int i = 0; i < in_ids.size(); i++) {
-            if (i > 0) {
-                whereClause += ", ";
-            }
-            whereClause += "'" + in_ids.get(i).intValue() + "'";
+        for (int i = 0; i < in_hashes.size(); i++) {
+            db.execSQL(
+                    "UPDATE outpoints SET spent = 1 WHERE ((" + HASH + " = ?) AND (" + N + " = ?))",
+                    new Object[]{in_hashes.get(i), in_indexes.get(i)});
         }
-        whereClause += "))";
-        db.execSQL("UPDATE outpoints SET spent = 1 WHERE " + whereClause);
         
         return tx;
     }
