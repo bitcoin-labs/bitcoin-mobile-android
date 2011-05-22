@@ -37,8 +37,7 @@ public class Bitcoin extends Activity
         final View refreshButton = findViewById(R.id.refreshButton);
         refreshButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-//                refreshButton.setEnabled(false);
-                startService(new Intent(getApplicationContext(), OutpointService.class));
+                refreshOutpoints();
             }
         });
         findViewById(R.id.recButton).setOnClickListener(new View.OnClickListener() {
@@ -64,16 +63,17 @@ public class Bitcoin extends Activity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case R.id.refresh:
-            refreshBalance();
+            refreshOutpoints();
             return true;
         default:
             return super.onOptionsItemSelected(item);
         }
     }
 
-    private void refreshBalance() {
+    private void refreshOutpoints() {
+//      refreshButton.setEnabled(false);
         balanceStatusView.setText("Refreshing...");
-        getApplicationContext().startService(new Intent());
+        startService(new Intent(getApplicationContext(), OutpointService.class));
     }
 
     private void callScan()

@@ -13,6 +13,7 @@ import com.google.bitcoin.core.NetworkParameters;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -132,9 +133,12 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         for (Outpoint outpoint : outpoints) {
             outpoint.getAddress();
             try {
-            db.execSQL(
-                    "INSERT INTO outpoints ('"+HASH+"', '"+ADDRESS+"', '"+N+"', '"+SATOSHIS+"') VALUES (?, ?, ?, ?)",
-                    new Object[] { outpoint.getHash(), outpoint.getAddress(), outpoint.getIndex(), outpoint.getSatoshis()} );
+                ContentValues values = new ContentValues();
+                values.put(HASH, Util.hexStringToByteArray(outpoint.getHash()));
+                values.put(ADDRESS, outpoint.getAddress());
+                values.put(N, outpoint.getIndex());
+                values.put(SATOSHIS, outpoint.getSatoshis());
+                db.insertOrThrow("outpoints", null, values );
             } catch (SQLiteConstraintException e) {
                 //do nothing as we will assume we already have a record of this outpoint.
                 //TODO verify that we have the right ADDRESS and SATOSHIS for this outpoint
@@ -146,7 +150,7 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
     public long getBalance() {
         long satoshis = 0;
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.query("outpoints", new String[]{SATOSHIS}, "spent = 0", null, null, null, null, "5");
+        Cursor cursor = db.query("outpoints", new String[]{SATOSHIS}, "spent = 0", null, null, null, null);
         cursor.moveToFirst();
         while (cursor.isAfterLast() == false) {
             satoshis += cursor.getLong(0);
