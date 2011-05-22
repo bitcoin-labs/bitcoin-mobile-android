@@ -52,7 +52,6 @@ public class ConfirmPay extends Activity
         setTitle("Send Bitcoin");
         setContentView(R.layout.pay_confirm);
         
-        double val = 0;
         Uri bitcoinUri = getIntent().getData();
         assert("bitcoin".equals(bitcoinUri.getScheme()));
         
@@ -72,20 +71,18 @@ public class ConfirmPay extends Activity
         payLabel.setText(label);
         payMessage.setText(message);
         
-        // TODO: lossless parsing
-        double amountD = 0.0;
-        try {
-            amountD = Double.parseDouble(amount);
-        } catch (Exception e) {
+        long initialSatoshis = 0;
+        if (amount != null) {
+            initialSatoshis = MoneyUtils.btcStringToSatoshis(amount);
         }
-        final long amountSatoshis = (long)(amountD * 1e8);
-        
-        payAmount.setText(MoneyUtils.formatMoney(amountD));
+        payAmount.setText(MoneyUtils.formatSatoshisAsBtcString(initialSatoshis));
         payAmount.setSelectAllOnFocus(true);
         findViewById(R.id.confirmButton).setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View view)
             {
+                long amountSatoshis = MoneyUtils.btcStringToSatoshis(payAmount.getText().toString());
+                
                 WalletOpenHelper helper = new WalletOpenHelper(getApplicationContext());
                 Transaction tx = helper.createTransaction(amountSatoshis, bitcoinAddress, FEE_SATOSHIS);
                 

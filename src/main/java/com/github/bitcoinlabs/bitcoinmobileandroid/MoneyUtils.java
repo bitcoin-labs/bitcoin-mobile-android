@@ -26,17 +26,32 @@ public class MoneyUtils
         return btcString;
     }
     
-    public static long btcStringToSatoshis(String btcAmount) {
-        if (btcAmount == null) {
-            throw new NullPointerException("btcAmount may not be null");
+    public static long btcStringToSatoshis(String amount) {
+        if (amount == null) {
+            throw new NullPointerException("amount may not be null");
         }
-        try {
-            double btcAmountDouble = Double.parseDouble(btcAmount);
-            
-            long satoshis = (long)(btcAmountDouble * SATOSHIS_PER_BITCOIN);
-            return satoshis;
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("btcAmount not a valid decimal: " + btcAmount, e);
+        if (amount.matches("^[0-9]+$")) {
+            return Long.parseLong(amount);
+        }
+        else if (amount.matches("^[0-9]*\\.[0-9]+$")) {
+            String[] pair = amount.split("\\.");
+            long left, right;
+            if (pair[0].length() == 0) {
+                left = 0;
+            }
+            else {
+                left = Long.parseLong(pair[0]);
+            }
+            if (pair[1].length() > 8) {
+                throw new RuntimeException("invalid amount string: " + amount);
+            }
+            else {
+                right = Long.parseLong(pair[1]);
+            }
+            return (left * 100000000) + right * (long)Math.pow(10, 8 - pair[1].length());
+        }
+        else {
+            throw new RuntimeException("invalid amount string: " + amount);
         }
     }
 
