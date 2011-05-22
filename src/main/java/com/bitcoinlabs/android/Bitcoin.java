@@ -1,18 +1,9 @@
 package com.bitcoinlabs.android;
 
-import com.github.bitcoinlabs.bitcoinmobileandroid.R;
-import com.github.bitcoinlabs.bitcoinmobileandroid.R.id;
-import com.github.bitcoinlabs.bitcoinmobileandroid.R.layout;
-import com.github.bitcoinlabs.bitcoinmobileandroid.R.menu;
-
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;

@@ -1,7 +1,6 @@
 package com.bitcoinlabs.android;
 
 import java.util.Hashtable;
-import java.util.LinkedList;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,30 +15,18 @@ import android.net.Uri;
 import android.net.Uri.Builder;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore.Audio;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
-import android.view.View.OnKeyListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.github.bitcoinlabs.bitcoinmobileandroid.R;
-import com.github.bitcoinlabs.bitcoinmobileandroid.R.id;
-import com.github.bitcoinlabs.bitcoinmobileandroid.R.layout;
-import com.github.bitcoinlabs.bitcoinmobileandroid.R.menu;
 import com.google.bitcoin.core.Address;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;

@@ -1,5 +1,20 @@
 package com.bitcoinlabs.android;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,31 +25,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.math.BigInteger;
-import java.io.IOException;
-
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.BasicHttpParams;
-
-import com.github.bitcoinlabs.bitcoinmobileandroid.R;
-import com.github.bitcoinlabs.bitcoinmobileandroid.R.id;
-import com.github.bitcoinlabs.bitcoinmobileandroid.R.layout;
-import com.google.bitcoin.core.TransactionStandaloneEncoder;
-import com.google.bitcoin.core.NetworkParameters;
-import com.google.bitcoin.core.Transaction;
-import com.google.bitcoin.core.ECKey;
 import com.google.bitcoin.bouncycastle.util.encoders.Base64;
-import com.google.bitcoin.core.AddressFormatException;
+import com.google.bitcoin.core.Transaction;
 
 /**
  * Created by IntelliJ IDEA.

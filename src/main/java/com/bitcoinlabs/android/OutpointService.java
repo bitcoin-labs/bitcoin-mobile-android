@@ -3,8 +3,6 @@ package com.bitcoinlabs.android;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -14,17 +12,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.json.JSONObject;
-
-import com.github.bitcoinlabs.bitcoinmobileandroid.R;
-import com.github.bitcoinlabs.bitcoinmobileandroid.R.drawable;
-import com.github.bitcoinlabs.bitcoinmobileandroid.R.string;
-import com.google.bitcoin.core.Address;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -32,10 +19,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Binder;
-import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.google.bitcoin.core.Address;
+import com.google.gson.Gson;
 
 public class OutpointService extends IntentService {
 
