@@ -1,6 +1,8 @@
 package com.bitcoinlabs.android;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,14 +15,17 @@ public class MoneyUtils
 {
     public static final long SATOSHIS_PER_BITCOIN = 100000000;
 
+    // use US decimal format symbols to match the regEx for parsing (also on users with non-US locale)
+    private static final DecimalFormatSymbols usSymbols = new DecimalFormatSymbols(Locale.US);
+
     public static String formatMoney(double val)
     {
-        final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00######");
+        final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00######", usSymbols);
         return decimalFormat.format(val);
     }
     
     public static String formatSatoshisAsBtcString(long satoshis) {
-        final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00######");
+        final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00######", usSymbols);
         double btcAmountDouble = satoshis * 1.0 / SATOSHIS_PER_BITCOIN;
         String btcString = decimalFormat.format(btcAmountDouble);
         return btcString;
