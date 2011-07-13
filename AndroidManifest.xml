@@ -22,6 +22,7 @@
                 <data android:scheme="bitcoin" />
             </intent-filter>
         </activity>
+        <activity android:name=".settings.Preferences" android:label="Bitcoin Settings"/>
         <service android:name=".OutpointService" android:label="Bitcoin Outpoint Service" android:process=":outpoint">
         </service>
     </application>

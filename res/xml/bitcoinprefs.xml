@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:title="Transaction Fee"
+        android:dialogTitle="Transaction Fee"
+        android:dialogMessage="Bitcoins to offer as a transaction fee to miners."
+        android:key="txFee"
+        android:defaultValue="0.005"
+        android:inputType="numberDecimal"/>
+    <PreferenceCategory
+        android:title="Exit Nodes"
+        android:key="exitNode">
+        <CheckBoxPreference
+            android:key="schaafNode"
+            android:title="Schaaf Exit Node"
+            android:summary="http://97.107.139.194:8000/api/unspent-outpoints.js"/>
+        <Preference
+            android:key="addExitNode"
+            android:title="Add Exit Node"/>
+    </PreferenceCategory>
+</PreferenceScreen>

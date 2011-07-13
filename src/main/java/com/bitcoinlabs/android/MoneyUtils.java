@@ -20,12 +20,12 @@ public class MoneyUtils
 
     public static String formatMoney(double val)
     {
-        final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00######", usSymbols);
+        final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00000000", usSymbols);
         return decimalFormat.format(val);
     }
     
     public static String formatSatoshisAsBtcString(long satoshis) {
-        final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00######", usSymbols);
+        final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00000000", usSymbols);
         double btcAmountDouble = satoshis * 1.0 / SATOSHIS_PER_BITCOIN;
         String btcString = decimalFormat.format(btcAmountDouble);
         return btcString;

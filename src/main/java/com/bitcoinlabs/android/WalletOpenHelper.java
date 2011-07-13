@@ -252,11 +252,13 @@ public class WalletOpenHelper extends SQLiteOpenHelper {
         tx = tse.createSignedTransaction();
         
         // Spend outpoints
+        db = getWritableDatabase();
         for (int i = 0; i < in_hashes.size(); i++) {
             db.execSQL(
                     "UPDATE outpoints SET spent = 1 WHERE ((" + HASH + " = ?) AND (" + N + " = ?));",
                     new Object[]{in_hashes.get(i), in_indexes.get(i)});
         }
+        db.close();
         
         return tx;
     }

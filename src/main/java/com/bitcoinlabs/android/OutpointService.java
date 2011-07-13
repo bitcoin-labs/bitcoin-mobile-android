@@ -36,6 +36,12 @@ public class OutpointService extends IntentService {
     public OutpointService() {
         super("OutpointService");
     }
+    public Outpoint outpointPGWA;
+    {
+        //ProGuard work around for Outpoint class
+        outpointPGWA = new Outpoint("foo", "bar", 1, 1);
+        Log.i(getClass().getSimpleName()+"", "Attempt to get proguard to treat Outpoint class properly"+outpointPGWA+"");
+    }
 
 //    /**
 //     * Class for clients to access.  Because we know this service always

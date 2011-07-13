@@ -45,6 +45,7 @@ task configureDebug << {
 }
 // Enable proguard
 task configureProguard << {
+    proguardOptions['configuration'] = new File(project.rootDir, "proguard.cfg")
     proguard.enabled = true
 }
 // Configure build for release to market

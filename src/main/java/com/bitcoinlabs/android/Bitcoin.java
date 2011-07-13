@@ -1,9 +1,13 @@
 package com.bitcoinlabs.android;
 
+import com.bitcoinlabs.android.settings.Preferences;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,10 +17,13 @@ import android.widget.Toast;
 
 public class Bitcoin extends Activity
 {
+    private static final int REQUEST_CODE_PREFERENCES = 1;
+
     public static final String BITCOIN_EXIT_NODE_BALANCE = "http://97.107.139.194:8000/api/unspent-outpoints.js";
     private TextView balanceStatusView;
     private TextView balanceView;
     private TextView balanceUnconfirmedView;
+    
 
     /**
      * Called when the activity is first created.
@@ -26,6 +33,7 @@ public class Bitcoin extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         balanceStatusView = (TextView)findViewById(R.id.balance_status);
         balanceView = (TextView)findViewById(R.id.balance);
 //        balanceUnconfirmedView = (TextView)findViewById(R.id.balance_unconfirmed);
@@ -51,8 +59,8 @@ public class Bitcoin extends Activity
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        super.onResume();
+        boolean hasFocusProGuardWorkAround = hasFocus;
+        super.onWindowFocusChanged(hasFocusProGuardWorkAround);
         WalletOpenHelper wallet = new WalletOpenHelper(getApplicationContext());
         long balance = wallet.getBalance();
         balanceView.setText(MoneyUtils.formatSatoshisAsBtcString(balance) + "BTC");
@@ -71,6 +79,13 @@ public class Bitcoin extends Activity
         case R.id.refresh:
             refreshOutpoints();
             return true;
+        case R.id.settings:
+
+            // When the button is clicked, launch an activity through this intent
+            Intent launchPreferencesIntent = new Intent().setClass(this, Preferences.class);
+
+            // Make it a subactivity so we know when it returns
+            startActivityForResult(launchPreferencesIntent, REQUEST_CODE_PREFERENCES);
         default:
             return super.onOptionsItemSelected(item);
         }
